@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Payroll - {{ employee.first_name }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+ body {
+      font-family: "Poppins", sans-serif;
+      /* ✅ Add your background image here */
+      background-image: url("{% static 'images/corporate-data-management-system-dms-260nw-695625982.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+
+    /* Add overlay effect for better readability */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); /* dark overlay */
+      z-index: -1;
+    }
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 230px;
+      background: linear-gradient(to bottom, black);
+      color: #fff;
+      padding-top: 30px;
+    }
+
+    .sidebar h4 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .sidebar a {
+      color: #fff;
+      display: block;
+      text-decoration: none;
+      padding: 10px 20px;
+      transition: all 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.2);
+      border-left: 4px solid #fff;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 240px;
+      padding: 30px;
+    }
+
+    @media (max-width: 991px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h4>VETRI IT SOLUTIONS ADMIN</h4>
+    <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+    <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i>All Employees</a>
+    <a href="{% url 'view_departments' %}">🏢Departments</a>
+    <a href="{% url 'attendance_list' %}">📅 Attendance</a>
+    <a href="{% url 'payroll_list' %}" class="active">💰 Payroll</a>
+    <a href="{% url 'leave_list' %}">📅 Leave</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h3 class="mb-4">Add Payroll for {{ employee.first_name }} {{ employee.last_name }}</h3>
+    
+    <form method="POST" style="max-width: 600px;">
+      {% csrf_token %}
+      <div class="mb-2">
+        <label>Month</label>
+        <input type="text" name="month" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label>Basic Salary</label>
+        <input type="number" name="basic_salary" class="form-control" required>
+      </div>
+      <div class="mb-2">
+        <label>HRA</label>
+        <input type="number" name="hra" class="form-control" value="0">
+      </div>
+      <div class="mb-2">
+        <label>Allowances</label>
+        <input type="number" name="allowances" class="form-control" value="0">
+      </div>
+      <div class="mb-2">
+        <label>Provident Fund</label>
+        <input type="number" name="provident_fund" class="form-control" value="0">
+      </div>
+      <div class="mb-2">
+        <label>Tax</label>
+        <input type="number" name="tax" class="form-control" value="0">
+      </div>
+      
+      <button type="submit" class="btn btn-success">Generate Payroll</button>
+      <a href="{% url 'payroll_list' %}" class="btn btn-secondary">Back to Payroll List</a>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
