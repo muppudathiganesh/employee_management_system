@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Schedule Meeting | Employee Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+  <div class="card shadow-lg p-4 rounded-4">
+    <h2 class="text-center text-success mb-4">📅 Schedule a Meeting</h2>
+
+    <form method="POST" action="{% url 'schedule_meeting' %}">
+  {% csrf_token %}
+  
+  <label>Meeting Title</label>
+  <input type="text" name="title" class="form-control" required>
+
+  <label>Date & Time</label>
+  <input type="datetime-local" name="datetime" class="form-control" required>
+
+  <label>Details</label>
+  <textarea name="details" class="form-control" rows="3" required></textarea>
+
+  <label>Select Employees</label>
+  <select name="employees" class="form-select" multiple required>
+    {% for emp in employees %}
+      <option value="{{ emp.id }}">{{ emp.first_name }} {{ emp.last_name }}</option>
+    {% empty %}
+      <option disabled>No employees found</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn btn-success mt-3">Schedule Meeting</button>
+</form>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from .views import chat_with_employee, send_message
 urlpatterns = [
     path('employees/', views.employee_list, name='employee_list'),
      path('payroll/', views.payroll_list, name='payroll_list'),
@@ -40,9 +40,17 @@ path('leave/apply/<int:employee_id>/', views.apply_leave, name='apply_leave'),
  path('logout/', views.logout_view, name='logout'),
 path('register/', views.register, name='register'),
 path('employee/dashboard/', views.employee_dashboard, name='employee_dashboard'),
+# ----meeting
+  path('meeting_section/', views.meeting_section, name='meeting_section'),
+    path('schedule_meeting/', views.schedule_meeting, name='schedule_meeting'),
+#     path('employee_meetings/', views.employee_meetings, name='employee_meetings'),
+# path('admin_meetings/', views.admin_meetings, name='admin_meetings'),
+ path('meetings/', views.meetings_view, name='meetings_view'),
+#  chat---------------
 
-  
-  
-    
+   path('chat/<int:employee_id>/', views.chat_with_employee, name='chat_with_employee'),
+path('send-message/', views.send_message, name='send_message'),
+path('chatbox/', views.chatbox, name='chatbox'),
+path('chat/admin/', views.admin_chat_list, name='admin_chat_list'),
 
 ]

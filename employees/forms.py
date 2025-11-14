@@ -21,3 +21,4 @@ class EmployeeForm(forms.ModelForm):
             'department': forms.TextInput(attrs={'class': 'form-control'}),
             'designation': forms.TextInput(attrs={'class': 'form-control'}),
         }
+

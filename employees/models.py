@@ -17,7 +17,7 @@ class Designation(models.Model):
 
 # 2. Employee Profile
 class Employee(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     emp_id = models.CharField(max_length=20, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100, blank=True)
@@ -74,6 +74,7 @@ class Payroll(models.Model):
 
     def __str__(self):
         return f"{self.employee.first_name} - {self.month}"
+    
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -84,3 +85,31 @@ class EmployeeLoginLogout(models.Model):
     
     def __str__(self):
         return f"{self.employee.username} - Login: {self.login_time} Logout: {self.logout_time}"
+
+
+from django.db import models
+from .models import Employee  # Import the Employee model
+
+class Meeting(models.Model):
+    title = models.CharField(max_length=200)
+    datetime = models.DateTimeField()
+    details = models.TextField()
+    employees = models.ManyToManyField(Employee, related_name='meetings')  # Many-to-many relation
+    created_at = models.DateTimeField(auto_now_add=True)
+    message = models.TextField(blank=True, null=True)  # Optional field
+
+    def __str__(self):
+        return self.title
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_messages")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages")
+    message = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.sender.username} → {self.receiver.username}"

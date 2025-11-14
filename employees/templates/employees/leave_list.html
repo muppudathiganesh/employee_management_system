@@ -14,10 +14,11 @@
  body {
       font-family: "Poppins", sans-serif;
       /* ✅ Add your background image here */
-      background-image: url("{% static 'images/corporate-data-management-system-dms-260nw-695625982.jpg' %}");
+      /* background-image: url("{% static 'images/corporate-data-management-system-dms-260nw-695625982.jpg' %}");
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
+      background-repeat: no-repeat; */
+      background-color: #fff;
       min-height: 100vh;
       margin: 0;
       color: #fff;
@@ -31,7 +32,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.4); /* dark overlay */
+      background:white;
       z-index: -1;
     }
     /* Sidebar */
@@ -41,7 +42,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      background-color: #212529;
+      background-color:rgb(53, 148, 53);
       color: white;
       padding-top: 20px;
       transition: all 0.3s;
@@ -50,7 +51,7 @@
 
     .sidebar h4 {
       text-align: center;
-      font-size: 18px;
+      font-size: 24px;
       margin-bottom: 30px;
     }
 
@@ -59,7 +60,7 @@
       color: white;
       padding: 12px 20px;
       text-decoration: none;
-      font-size: 15px;
+      font-size: 18px;
       border-radius: 8px;
       transition: 0.3s;
     }
@@ -132,7 +133,7 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <button class="close-btn d-md-none" onclick="toggleSidebar()">&times;</button>
-    <h4>VETRI IT SOLUTIONS </h4>
+    <h4>MORTZA </h4>
       {% if request.user.is_superuser %}
     <a href="{% url 'dashboard' %}" ><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
     <a href="{% url 'employee_list' %}" class="active"><i class="bi bi-people me-2"></i>All Employees</a>

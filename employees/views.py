@@ -552,32 +552,38 @@ def register(request):
 
     return render(request, 'employees/register.html')
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+
+from .models import Employee, Meeting
+
+
+# ------------------------------
+# Employee Dashboard
+# ------------------------------
 @login_required
 def employee_dashboard(request):
-    # Example: Get employee-specific data
-    user = request.user
-    employee = None
-    try:
-        employee = Employee.objects.get(user=user)
-    except Employee.DoesNotExist:
-        pass
+    # Match employee based on email (safe method)
+    employee = Employee.objects.filter(email=request.user.email).first()
 
     context = {
         'employee': employee,
-        'present_today': 5,  # example stats
+        'present_today': 5,
         'absent_today': 1,
         'leave_today': 2,
     }
     return render(request, 'employees/employee_dashboard.html', context)
 
 
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from django.contrib import messages
-
+# ------------------------------
+# Login View
+# ------------------------------
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -592,13 +598,261 @@ def login_view(request):
                 return redirect('employee_dashboard')  # employee dashboard
         else:
             messages.error(request, 'Invalid username or password')
-    return render(request, 'employees/login.html')
-# views.py
-from django.http import JsonResponse
 
+    return render(request, 'employees/login.html')
+
+
+# ------------------------------
+# Attendance Events API
+# ------------------------------
 def attendance_events(request):
     events = [
         {"title": "Present", "start": "2025-11-01", "color": "#28a745"},
         {"title": "Leave", "start": "2025-11-05", "color": "#dc3545"},
     ]
     return JsonResponse(events, safe=False)
+
+
+# ------------------------------
+# Meeting Section Page
+# ------------------------------
+def meeting_section(request):
+    employees = Employee.objects.all()
+    return render(request, 'employees/meeting_section.html', {'employees': employees})
+
+
+# ------------------------------
+# Schedule Meeting + Send Email
+# ------------------------------
+def schedule_meeting(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        datetime_value = request.POST.get('datetime')
+        details = request.POST.get('details')
+        employee_ids = request.POST.getlist('employees')
+
+        # Create meeting
+        meeting = Meeting.objects.create(
+            title=title,
+            datetime=datetime_value,
+            details=details
+        )
+        meeting.employees.set(employee_ids)
+        meeting.save()
+
+        # Get selected employees
+        selected_employees = Employee.objects.filter(id__in=employee_ids)
+
+        # Send email notifications
+        for emp in selected_employees:
+            if emp.email:
+                send_mail(
+                    subject=f"📅 New Meeting Scheduled: {title}",
+                    message=f"""
+Dear {emp.first_name},
+
+A new meeting has been scheduled.
+
+📌 Title: {title}
+📅 Date & Time: {datetime_value}
+📝 Details: {details}
+
+Please attend on time.
+
+Regards,
+Admin
+""",
+                    from_email="muppuraj11@gmail.com",
+                    recipient_list=[emp.email],
+                    fail_silently=True,
+                )
+
+        messages.success(request, "✅ Meeting scheduled successfully and notifications sent!")
+        return redirect('dashboard')
+
+    # GET request: show meeting page
+    employees = Employee.objects.all()
+    return render(request, 'employees/meeting_section.html', {'employees': employees})
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Employee, Meeting
+from django.core.mail import send_mail
+
+# ------------------------------
+# Unified meetings view
+# ------------------------------
+@login_required
+def meetings_view(request):
+    if request.user.is_staff:
+        # admin
+        meetings = Meeting.objects.all().order_by('-datetime')
+        return render(request, 'employees/meetings.html', {
+            'meetings': meetings,
+            'is_admin': True
+        })
+    else:
+        # employee
+        employee = request.user.employee
+        meetings = employee.meetings.all().order_by('datetime')
+        return render(request, 'employees/meetings.html', {
+            'meetings': meetings,
+            'is_admin': False
+        })
+
+
+
+
+# from django.shortcuts import get_object_or_404
+# from .models import Meeting
+# # def employee_meetings(request):
+# #     employee = get_object_or_404(Employee, user=request.user)
+# #     meetings = employee.meetings.all()
+# #     return render(request, 'employees/employee_meetings.html', {'meetings': meetings})
+# from django.shortcuts import render
+# from django.contrib.auth.decorators import login_required
+# from .models import Meeting, Employee
+
+# @login_required
+# def meetings_view(request):
+#     """
+#     Unified meeting view:
+#     - If employee: show only their meetings
+#     - If admin (staff): show all meetings
+#     """
+#     user = request.user
+
+#     if user.is_staff:
+#         # Admin sees all meetings
+#         meetings = Meeting.objects.all().order_by('-datetime')
+#         is_admin = True
+#         employee = None
+#     else:
+#         # Employee sees only their meetings
+#         try:
+#             employee = user.employee  # Assuming OneToOneField from Employee to User
+#             meetings = employee.meetings.all().order_by('datetime')
+#         except Employee.DoesNotExist:
+#             meetings = []
+#             employee = None
+#         is_admin = False
+
+#     return render(request, 'employees/meetings.html', {
+#         'meetings': meetings,
+#         'employee': employee,
+#         'is_admin': is_admin
+#     })
+
+# def employee_meetings(request):
+#     employee = Employee.objects.get(user=request.user)
+#     meetings = Meeting.objects.filter(employees=employee)
+#     return render(request, 'employees/employee_meeting.html', {'meetings': meetings})
+
+
+# def admin_meetings(request):
+#     meetings = Meeting.objects.all().order_by('-datetime')
+#     return render(request, 'employees/admin_meetings.html', {'meetings': meetings})
+# from django.shortcuts import render
+# from django.contrib.auth.decorators import login_required
+# from .models import Meeting, Employee
+
+# @login_required
+# def employee_meetings(request):
+#     try:
+#         employee = request.user.employee  # get Employee linked to the logged-in user
+#     except Employee.DoesNotExist:
+#         # If no employee record exists, return empty meetings
+#         return render(request, 'employees/employee_meetings.html', {'meetings': []})
+
+#     # Get only meetings that this employee is part of, ordered by datetime
+#     meetings = employee.meetings.all().order_by('datetime')
+
+#     return render(request, 'employees/employee_meetings.html', {
+#         'meetings': meetings,
+#         'employee': employee
+#     })
+
+
+
+# from django.shortcuts import render
+# from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.models import User
+# from .models import Meeting, Employee
+
+# @login_required
+# def employee_meetings(request):
+#     try:
+#         employee = request.user.employee
+#     except Employee.DoesNotExist:
+#         return render(request, 'employees/employee_meetings.html', {'meetings': []})
+
+#     meetings = employee.meetings.all().order_by('datetime')
+
+#     return render(request, 'employees/employee_meetings.html', {'meetings': meetings})
+
+
+
+# chat------------------------------
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from .models import ChatMessage
+from django.utils import timezone
+
+
+def chat_with_employee(request, employee_id):
+    employee = User.objects.get(id=employee_id)
+
+    # Load messages between admin and employee
+    messages = ChatMessage.objects.filter(
+        sender__in=[request.user, employee],
+        receiver__in=[request.user, employee]
+    ).order_by("timestamp")
+
+    return render(request, "employees/chatbox.html", {
+        "employee": employee,
+        "messages": messages
+    })
+
+
+def send_message(request):
+    if request.method == "POST":
+        message_text = request.POST.get("message", "").strip()
+        receiver_id = request.POST.get("receiver_id")
+
+        if not receiver_id or not receiver_id.isdigit():
+            return JsonResponse({"status": "error", "message": "Invalid receiver"}, status=400)
+
+        receiver = User.objects.get(id=int(receiver_id))
+
+        ChatMessage.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            message=message_text,
+            timestamp=timezone.now()
+        )
+
+        return JsonResponse({"status": "success"})
+
+    return JsonResponse({"status": "invalid_method"}, status=405)
+
+
+def admin_chat_list(request):
+    if not request.user.is_superuser:
+        return redirect("employee_dashboard")
+
+    employees = User.objects.filter(is_superuser=False)
+
+    return render(request, "employees/admin_chat_list.html", {
+        "employees": employees
+    })
+
+
+def employee_dashboard(request):
+    admin_user = User.objects.filter(is_superuser=True).first()
+
+    return render(request, "employees/employee_dashboard.html", {
+        "admin_id": admin_user.id
+    })
+def chatbox(request):
+    return render(request, 'employees/chatbox.html')

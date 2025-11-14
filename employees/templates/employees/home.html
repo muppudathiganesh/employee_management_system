@@ -1,14 +1,15 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Employee Management Dashboard</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
+  <!-- Bootstrap CSS & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
     body {
@@ -18,18 +19,26 @@
       overflow-x: hidden;
     }
 
-    /* Sidebar */
+ .navbar li  {
+     color:black;
+     font-size: x-large;
+ }
+    .navbar {
+      z-index: 1050;
+      
+    }
     .sidebar {
       width: 250px;
       height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
-      background-color: black;
+      background-color:rgb(53, 148, 53);
       color: white;
       padding-top: 30px;
       transition: left 0.3s ease;
       z-index: 1000;
+      margin-top: 80px; /* below navbar */
     }
 
     .sidebar h4 {
@@ -44,7 +53,7 @@
       color: white;
       padding: 12px 20px;
       text-decoration: none;
-      font-size: 15px;
+      font-size: larger;
       transition: 0.3s;
     }
 
@@ -53,17 +62,12 @@
       border-left: 4px solid white;
     }
 
-    /* Mobile sidebar hidden initially */
     @media (max-width: 768px) {
-      .sidebar {
-        left: -250px;
-      }
-      .sidebar.active {
-        left: 0;
-      }
+      .sidebar { left: -250px; }
+      .sidebar.active { left: 0; }
     }
 
-    /* Toggle button */
+    /* Toggle Button */
     .toggle-btn {
       display: none;
       background: #0d6efd;
@@ -75,28 +79,26 @@
     }
 
     @media (max-width: 768px) {
-      .toggle-btn {
-        display: inline-block;
-      }
+      .toggle-btn { display: inline-block; }
     }
 
-    /* Content area */
+    /* === Content === */
     .content {
       margin-left: 250px;
       padding: 20px;
-      background: url("{% static 'images/SUNBASE+-+Blog+May+Week+3-640w.webp' %}") no-repeat center center fixed;
+      /* background: url("{% static 'images/SUNBASE+-+Blog+May+Week+3-640w.webp' %}") no-repeat center center fixed; */
       background-size: cover;
       min-height: 100vh;
       position: relative;
       transition: margin-left 0.3s;
+      margin-top: 90px; /* offset for navbar */
     }
 
     @media (max-width: 768px) {
-      .content {
-        margin-left: 0;
-      }
+      .content { margin-left: 0; }
     }
 
+    /* Topbar */
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -108,295 +110,494 @@
       margin-bottom: 25px;
     }
 
-    /* Dashboard Cards */
+    /* Cards */
     .dashboard-cards .card {
       border: none;
       border-radius: 12px;
       color: white;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
       text-align: center;
       min-height: 220px;
       transition: transform 0.2s;
     }
 
-    .dashboard-cards .card:hover {
-      transform: translateY(-5px);
-    }
+    .dashboard-cards .card:hover { transform: translateY(-5px); }
 
-    .bg-orange, .bg-blue, .bg-green, .bg-teal {
-      background-color: gray;
-    }
+    .bg-orange { background-color: #fd7e14; }
+    .bg-blue { background-color: #0d6efd; }
+    .bg-green { background-color: #198754; }
+    .bg-teal { background-color: #20c997; }
 
-    @media (max-width: 768px) {
-      .dashboard-cards .card {
-        height: auto;
-        padding: 20px;
-      }
-    }
+    canvas { max-width: 320px; width: 100%; }
 
-    @media (max-width: 576px) {
-      h3, h2 {
-        font-size: 1.2rem;
-      }
-      .btn {
-        font-size: 0.9rem;
-        width: 120px !important;
-      }
+    footer {
+      margin-top: 40px;
+      background-color: #fff;
+      border-top: 1px solid #ddd;
     }
-   .sidebar-close-btn {
-  width: 26px;
-  height: 26px;
-  font-size: 16px;
-  line-height: 1;
-   /* border-radius: 50%;  */
-  text-align: center;
-  padding: 0;
-  background-color: white;
-  border: 1px solid #ccc;
+.about-section {
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 50px 25px;
+  transition: transform 0.3s ease;
 }
 
-.sidebar-close-btn:hover {
-  background-color: #dc3545;
+.about-section:hover {
+  transform: scale(1.01);
+}
+
+.about-section .border {
+  transition: all 0.3s ease;
+}
+
+.about-section .border:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.1);
+}
+.meeting-section {
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%);
+  transition: all 0.3s ease-in-out;
+}
+
+.meeting-section:hover {
+  box-shadow: 0 6px 20px rgba(0, 128, 0, 0.1);
+}
+
+.meeting-section img {
+  transition: transform 0.4s ease;
+}
+
+.meeting-section img:hover {
+  transform: scale(1.03);
+}
+#contact img {
+  transition: transform 0.6s ease;
+}
+
+#contact img:hover {
+  transform: scale(1.05);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+/* Sidebar Close Button */
+.close-btn {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  background: transparent;
+  border: none;
   color: white;
-} 
+  cursor: pointer;
+  z-index: 1101;
+}
 
-.bg-orange { background-color: #fd7e14; }
-.bg-blue { background-color: #0d6efd; }
-.bg-green { background-color: #198754; }
-.bg-teal { background-color: #20c997; }
-
-.card i {
+@media (max-width: 768px) {
+  .close-btn {
+    display: block;
+  }
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+.sidebar.active + .sidebar-overlay {
   display: block;
 }
-canvas {
-  max-width: 320px;
-  width: 100%;
-  
+@media (max-width: 768px) {
+  .navbar-nav .nav-link {
+    font-size: 1.1rem;
+    padding: 8px 0;
+  }
+  .navbar-collapse {
+    background: white;
+    padding: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .navbar {
+    padding: 10px 15px;
+  }
+}
+html, body {
+  overflow-x: hidden !important;
+}
+
+.navbar {
+  padding: 8px 10px;
+}
+
+@media (max-width: 768px) {
+  .navbar-toggler {
+    margin-right: 10px; /* keeps toggle visible */
+  }
+
+  .navbar-collapse {
+    background: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
 }
 
   </style>
 </head>
 <body>
 
+ <!-- 🌿 Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top border-bottom w-100">
+  <div class="container-fluid px-2">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="{% static 'images/Screenshot 2025-11-08 113901.png' %}" width="38" height="38" class="rounded-circle me-2">
+      <span class="fw-bold text-success fs-5">MORTZA</span>
+    </a>
+
+    <!-- Toggle Button -->
+    <button class="navbar-toggler ms-auto border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible Menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto text-center mt-3 mt-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contacts</a></li>
+      </ul>
+
+      <!-- Search + Logout -->
+      <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mb-3 mb-lg-0">
+        <form method="get" class="d-flex w-100 w-lg-auto" style="max-width: 300px;">
+          <input type="text" name="q" value="{{ q }}" placeholder="Search..." class="form-control me-2" />
+          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+        </form>
+        <a href="{% url 'logout' %}" class="btn btn-danger w-100 w-lg-auto">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <div class="position-relative mb-4 px-3 pt-3">
-    
-     <button class="btn btn-light d-md-none position-absolute top-0 end-0 mt-2 me-2 sidebar-close-btn" 
-        onclick="toggleSidebar()">&times;</button> 
-   <h4 class="m-0 text-center">VETRI IT SOLUTIONS</h4>
-
-    </div>
+     <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+    <h4>MORTZA</h4>
     {% if request.user.is_superuser %}
-    <a href="{% url 'dashboard' %}" ><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-    <a href="{% url 'employee_list' %}" class="active"><i class="bi bi-people me-2"></i>All Employees</a>
-     <a href="{% url 'view_departments' %}" >🏢Departments</a>
+      <a href="{% url 'dashboard' %}" class="active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+      <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i>All Employees</a>
+      <a href="{% url 'view_departments' %}">🏢 Departments</a>
       <a href="{% url 'attendance_list' %}">📅 Attendance</a>
-    <a href="{% url 'payroll_list' %}">💰 Payroll</a>
-    <a href="{% url 'leave_list' %}">📅Leave</a>
-     <a href="{% url 'employee_detail' %}">⚙️Employee Details </a>
-  </div> 
+      <a href="{% url 'payroll_list' %}">💰 Payroll</a>
+      <a href="{% url 'leave_list' %}">📅 Leave</a>
+     <a href="{% url 'meetings_view' %}">🗓️ Meetings</a>
+      <a href="{% url 'admin_chat_list' %}">💬 Chat</a>
+      <a href="{% url 'employee_detail' %}">⚙️ Employee Details</a>
     {% else %}
-     <a href="{% url 'employee_dashboard' %}" ><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-    <a href="{% url 'employee_list' %}" class="active"><i class="bi bi-people me-2"></i>All Employees</a>
-     <a href="{% url 'view_departments' %}" >🏢Departments</a>
+      <a href="{% url 'employee_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+      <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i>All Employees</a>
+      <a href="{% url 'view_departments' %}">🏢 Departments</a>
       <a href="{% url 'attendance_list' %}">📅 Attendance</a>
-    <a href="{% url 'payroll_list' %}">💰 Payroll</a>
-    <a href="{% url 'leave_list' %}">📅Leave</a>
-     <a href="{% url 'employee_detail' %}">⚙️Employee Details </a>
-     {% endif %}
- </div>
+      <a href="{% url 'payroll_list' %}">💰 Payroll</a>
+      <a href="{% url 'leave_list' %}">📅 Leave</a>
+       <a href="{% url 'meetings_view' %}">🗓️ My Meetings</a>
+      {% if not request.user.is_superuser %}
 
-  <!-- Content -->
+    <a href="{% url 'chat_with_employee' admin.id %}">💬 Chat with Admin</a>
+  
+{% endif %}
+      <a href="{% url 'employee_detail' %}">⚙️ Employee Details</a>
+    {% endif %}
+  </div>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main Content -->
   <div class="content">
     <button class="toggle-btn mb-3" onclick="toggleSidebar()">☰ Menu</button>
 
     <div class="topbar">
-      <h5 class="mb-0 text-primary">WELCOME VETRI IT SOLUTIONS</h5>
-      <div>
-        {% if request.user.is_superuser %}
-        <a href="{% url 'add_employee' %}" class="btn btn-primary me-2">+ Add New Employee</a>
-         {% endif %}
-           <a href="{% url 'logout' %}" class="btn btn-danger">
-    <i class="bi bi-box-arrow-right"></i> Logout
-  </a>
-      </div>
+      <h5 class="text-success mb-0">WELCOME ADMIN</h5>
+     
     </div>
 
     <!-- Dashboard Cards -->
     <div class="row g-4 dashboard-cards">
       <div class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-orange p-3">
-             <i class="bi bi-people-fill fs-1 mb-2"></i>
+        <div class="card bg-teal p-3">
+          <i class="bi bi-people-fill fs-1 mb-2"></i>
           <h3>Total Employees</h3>
           <h2>{{ total_employees }}</h2>
-          <a href="{% url 'employee_list' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width: 150px;">View All</a>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-blue p-3">
-             <i class="bi bi-calendar2-check-fill fs-1 mb-2"></i>
-          <h3>On Leave Today</h3>
-          <h2>{{ on_leave_today }}</h2>
-          <a href="{% url 'leave_list' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width: 150px;">View All</a>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-green p-3">
-            <i class="bi bi-building fs-1 mb-2"></i>
-          <h3>Total Department</h3>
-          <h2>{{ total_departments }}</h2>
-          <a href="{% url 'view_departments' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width: 150px;">View All</a>
+          <a href="{% url 'employee_list' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width:150px;">View All</a>
         </div>
       </div>
 
       <div class="col-lg-3 col-md-6 col-12">
         <div class="card bg-teal p-3">
-             <i class="bi bi-hourglass-split fs-1 mb-2"></i>
+          <i class="bi bi-calendar2-check-fill fs-1 mb-2"></i>
+          <h3>On Leave Today</h3>
+          <h2>{{ on_leave_today }}</h2>
+          <a href="{% url 'leave_list' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width:150px;">View All</a>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-12">
+        <div class="card bg-teal p-3 ">
+          <i class="bi bi-building fs-1 mb-2"></i>
+          <h3>Total Departments</h3>
+          <h2>{{ total_departments }}</h2>
+          <a href="{% url 'view_departments' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width:150px;">View All</a>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-12">
+        <div class="card bg-teal p-3">
+          <i class="bi bi-hourglass-split fs-1 mb-2"></i>
           <h3>Pending Approvals</h3>
           <h2>{{ pending_approvals }}</h2>
-          <a href="{% url 'attendance_list' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width: 150px;">View All</a>
+          <a href="{% url 'attendance_list' %}" class="btn btn-light text-black fw-bold mt-2 d-block mx-auto" style="width:150px;">View All</a>
         </div>
       </div>
     </div>
-<div class="row mt-5">
-  <!-- Latest News Section -->
-  <div class="col-lg-6 col-md-12 mb-4">
-    <!-- <div class="bg-green p-4 rounded shadow" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px);"> -->
-         <div class="bg-warning p-4 rounded shadow"> 
-      
-      <h1 class="text-center mb-4 text-primary">📢 Latest Office News</h1>
 
-      <!-- Bootstrap Carousel for News -->
-      <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-        <div class="carousel-inner text-center" style="min-height: 200px;">
-          <div class="carousel-item active">
-            <p class="fs-5"><strong>🎉 Employee of the Month:</strong><br> Rajesh Kumar from Sales Department</p>
-          </div>
-          <div class="carousel-item">
-            <p class="fs-5"><strong>📅 Upcoming Holiday:</strong><br> Diwali – November 10th (Saturday)</p>
-          </div>
-          <div class="carousel-item">
-            <p class="fs-5"><strong>🏆 Team Achievement:</strong><br> IT Team completed CRM Automation Project</p>
-          </div>
-          <div class="carousel-item">
-            <p class="fs-5"><strong>💬 Staff Meeting:</strong><br> HR meeting scheduled for Monday at 10 AM</p>
-          </div>
-          <div class="carousel-item">
-            <p class="fs-5"><strong>🎂 Birthdays:</strong><br> Happy Birthday to Priya & Naveen 🎈</p>
+    <!-- Charts and News -->
+    <div class="row mt-5">
+      <div class="col-lg-6 mb-4">
+        <div class="bg-white p-4 rounded shadow">
+          <h1 class="text-center mb-4 text-primary">📢 Latest Office News</h1>
+          <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
+            <div class="carousel-inner text-center" style="min-height:200px;">
+              <div class="carousel-item active"><p class="fs-5"><strong>🎉 Employee of the Month:</strong> <br>Rajesh Kumar (Sales)</p></div>
+              <div class="carousel-item"><p class="fs-5"><strong>📅 Holiday:</strong><br> Diwali – Nov 10 (Saturday)</p></div>
+              <div class="carousel-item"><p class="fs-5"><strong>🏆 Team Achievement:</strong><br> CRM Automation Completed!</p></div>
+              <div class="carousel-item"><p class="fs-5"><strong>💬 Staff Meeting:</strong> <br>Monday 10 AM</p></div>
+              <div class="carousel-item"><p class="fs-5"><strong>🎂 Birthdays:</strong><br> Priya & Naveen 🎈</p></div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Optional Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
-        </button>
+     <div class="col-lg-6 mb-4 text-center">
+  <h4 class="text-center mb-4 text-success fw-bold">Today's Attendance Overview</h4>
+  <div class="d-flex justify-content-center align-items-center" style="height:300px;">
+    <canvas id="attendanceChart"></canvas>
+  </div>
+</div>
+
+    </div>
+   <!-- 🏢 About Mortza Section -->
+<section id="about" class="about-section mt-5 p-4 rounded shadow-lg bg-white" data-aos="fade-up">
+
+  <h2 class="text-center text-success mb-4 fw-bold" data-aos="zoom-in">
+    <i class="bi bi-building me-2"></i>About Mortza
+  </h2>
+
+  <p class="fs-5 text-center text-muted mb-4 px-3" data-aos="fade-up" data-aos-delay="100">
+    <strong>Mortza </strong> is a modern HR solution crafted to simplify employee
+    data management, attendance tracking, payroll generation, and performance monitoring.
+    Built with cutting-edge technologies and a focus on user experience, it enables businesses
+    to handle HR operations efficiently and transparently.
+  </p>
+
+  <div class="row text-center g-4">
+    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="150">
+      <div class="border rounded p-4 h-100">
+        <i class="bi bi-people-fill fs-1 text-success mb-3"></i>
+        <h5 class="fw-bold text-dark">Smart Employee Management</h5>
+        <p class="text-muted">Manage employee records, roles, and departments effortlessly from a single dashboard.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="250">
+      <div class="border rounded p-4 h-100">
+        <i class="bi bi-calendar-check fs-1 text-success mb-3"></i>
+        <h5 class="fw-bold text-dark">Attendance & Leave Tracking</h5>
+        <p class="text-muted">Real-time tracking of attendance, automated leave approvals, and absence summaries.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="350">
+      <div class="border rounded p-4 h-100">
+        <i class="bi bi-cash-coin fs-1 text-success mb-3"></i>
+        <h5 class="fw-bold text-dark">Payroll Automation</h5>
+        <p class="text-muted">Generate salary slips, compute taxes, and process payroll with accuracy and ease.</p>
       </div>
     </div>
   </div>
 
-  <!-- Pie Chart Section -->
- <div class="col-lg-6 col-md-12">
-    <div class="p-4 rounded shadow" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(6px);">
-      <h4 class="text-center mb-4 text-black">Today's Attendance Overview</h4>
-      <div class="d-flex justify-content-center  align-items-center" style="height: 300px;">
-        <canvas id="attendanceChart" style="max-width: 280px; max-height: 280px; width: 100%; height: auto;"></canvas>
-      </div>
+<div class="text-center mt-4" data-aos="fade-up" data-aos-delay="400">
+  <img src="{% static 'images/employee.png' %}" 
+       alt="Our Mission"
+       class="img-fluid rounded shadow-sm" 
+       style="max-height: 280px; object-fit: cover;">
+</div>
+
+</section>
+<!-- 📅 Meeting Scheduler Section -->
+
+<section class="meeting-section mt-5 p-4 rounded shadow-lg bg-light" data-aos="fade-up">
+  <div class="row align-items-center g-4">
+
+    <!-- Left: Text -->
+    <div class="col-lg-6" data-aos="fade-right">
+      <h2 class="text-success fw-bold mb-3">
+        <i class="bi bi-calendar-event me-2"></i>Smart Meeting Scheduler
+      </h2>
+      <p class="text-muted fs-5">
+        Plan, organize, and manage your meetings efficiently with the 
+        <strong>Mortza Meeting Scheduler</strong>.
+        Sync meetings with your employee database, send automatic reminders, and track attendance — 
+        all within a unified dashboard.
+      </p>
+      <ul class="list-unstyled text-muted fs-6 mt-3">
+        <li><i class="bi bi-check-circle-fill text-success me-2"></i> Schedule one-on-one or group meetings</li>
+        <li><i class="bi bi-check-circle-fill text-success me-2"></i> Send calendar invites automatically</li>
+        <li><i class="bi bi-check-circle-fill text-success me-2"></i> Real-time meeting updates and alerts</li>
+      </ul>
+
+      <!-- Button to open Modal -->
+      <!-- <button class="btn btn-success mt-3 px-4 py-2 rounded-pill shadow-sm" 
+              data-bs-toggle="modal" data-bs-target="#meetingModal">
+        <i class="bi bi-plus-circle me-2"></i> Schedule a Meeting
+      </button> -->
+      <a href="{% url 'meeting_section' %}" 
+   class="btn btn-success mt-3 px-4 py-2 rounded-pill shadow-sm">
+  <i class="bi bi-plus-circle me-2"></i> Schedule a Meeting
+</a>
+
+    </div>
+
+    <!-- Right: Image -->
+    <div class="col-lg-6 text-center" data-aos="fade-left">
+      <img src="{% static 'images/SUNBASE+-+Blog+May+Week+3-640w.webp' %}" alt="Meeting Scheduler"
+           class="img-fluid rounded shadow-lg" style="max-height: 350px; object-fit: cover;">
     </div>
   </div>
+</section>
+
+
+
+  <!-- 🟢 Contact Section -->
+<div class="text-center my-5 py-5" id="contact" data-aos="fade-up" data-aos-delay="200">
+  <!-- Company Logo -->
+  <img src="{% static 'images/Screenshot 2025-11-08 113901.png' %}" 
+       alt="MORTZA Logo"
+       class="img-fluid mb-4"
+       style="height: 200px; width: auto;">
+
+  <!-- Company Name -->
+  <h2 class="fw-bold text-success mb-3" style="letter-spacing: 2px;">MORTZA</h2>
+
+  <!-- Address / Contact Details -->
+  <p class="text-secondary mb-1 fs-5">
+    No. 14, Tech Park, Bangalore, India
+  </p>
+  <p class="text-secondary mb-1 fs-5">
+    📞 +91 98765 43210
+  </p>
+  <p class="text-secondary fs-5">
+    ✉️ contact@mortza.com
+  </p>
 </div>
 
-    <!-- <div class="mt-5 bg-white p-4 rounded shadow">
-  <h4 class="text-center mb-4">Today's Attendance Overview</h4>
-  
-  <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
-    <canvas id="attendanceChart" style="max-width: 280px; max-height: 280px; width: 100%; height: auto;"></canvas>
-  </div> -->
-  
 
 </div>
+
   </div>
-
-<footer class="text-center py-3 bg-light border-top mt-auto">
-  <small class="text-muted">
-    Powered by :<strong>Vetri IT Solutions @2025</strong>
-  </small>
-</footer>
-
-  
-<!-- After your dashboard cards -->
-<!-- <div class="mt-5 bg-white p-4 rounded shadow">
-  <h4 class="text-center mb-4">Today's Attendance Overview</h4>
-   <div class="d-flex justify-content-center ">
-    <canvas id="attendanceChart" width="100" height="100"></canvas>
-  </div> 
   
 
-</div> -->
+  <!-- Footer -->
+  <footer class="text-center py-3">
+    <strong>Powerded by:</strong> <span class="text-success">Vetri IT Solutions</span> | © 2025 Mortza EMS
+  </footer>
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const present = parseInt("{{ present_today|default:'0' }}") || 0;
-  const absent = parseInt("{{ absent_today|default:'0' }}") || 0;
-  const leave = parseInt("{{ leave_today|default:'0' }}") || 0;
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const ctx = document.getElementById('attendanceChart');
+      const present = parseInt("{{ present_today|default:'0' }}") || 0;
+      const absent = parseInt("{{ absent_today|default:'0' }}") || 0;
+      const leave = parseInt("{{ leave_today|default:'0' }}") || 0;
 
-  const ctx = document.getElementById('attendanceChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Present', 'Absent', 'On Leave'],
-      datasets: [{
-        data: [present, absent, leave],
-        backgroundColor: ['#198754', '#dc3545', '#ffc107'],
-        borderColor: '#fff',
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: '70%',
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: '#000',   // 🖤 Legend text color set to black
-            font: {
-              size: 14,
-              family: "'Poppins', sans-serif"
-            }
-          }
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Present', 'Absent', 'On Leave'],
+          datasets: [{
+            data: [present, absent, leave],
+            backgroundColor: ['#198754', '#dc3545', '#ffc107'],
+            borderColor: '#fff',
+            borderWidth: 2
+          }]
         },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `${context.label}: ${context.raw}`;
+        options: {
+          cutout: '70%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#000', font: { size: 14, family: "'Poppins', sans-serif" } }
             }
           }
         }
-      }
-    }
-  });
-});
-</script>
+      });
+    });
 
-
-
-
-
-  <script>
+    // function toggleSidebar() {
+    //   document.getElementById('sidebar').classList.toggle('active');
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('active');
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('active');
+
+
     }
   </script>
+<!-- AOS Animation Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,     // animation duration (ms)
+    once: true,         // animate only once
+    offset: 100,        // distance before trigger
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sidebar toggle
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('active');
+  }
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  // === Navbar collapse close on link click ===
+  document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
+        bsCollapse.hide();
+      });
+    });
+  });
+</script>
+
+ 
 </body>
 </html>
