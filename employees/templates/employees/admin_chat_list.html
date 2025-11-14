@@ -45,7 +45,7 @@
       <a href="{% url 'attendance_list' %}">📅 Attendance</a>
       <a href="{% url 'payroll_list' %}">💰 Payroll</a>
       <a href="{% url 'leave_list' %}">📅 Leave</a>
-      <a href="{% url 'admin_meetings' %}">🗓️ Meetings</a>
+      <a href="{% url 'meetings_view' %}">🗓️ Meetings</a>
       <a href="{% url 'admin_chat_list' %}">💬 Chat</a>
       <a href="{% url 'employee_detail' %}">⚙️ Employee Details</a>
     {% else %}
@@ -55,7 +55,7 @@
       <a href="{% url 'attendance_list' %}">📅 Attendance</a>
       <a href="{% url 'payroll_list' %}">💰 Payroll</a>
       <a href="{% url 'leave_list' %}">📅 Leave</a>
-      <a href="{% url 'employee_meetings' %}">🗓️ My Meetings</a>
+      <a href="{% url 'meetings_view' %}">🗓️ My Meetings</a>
       <a href="{% url 'chat_with_employee' admin_id %}">💬 Chat with Admin</a>
       <a href="{% url 'employee_detail' %}">⚙️ Employee Details</a>
     {% endif %}
