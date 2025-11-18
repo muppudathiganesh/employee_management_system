@@ -75,16 +75,26 @@ class Payroll(models.Model):
     def __str__(self):
         return f"{self.employee.first_name} - {self.month}"
     
+# from django.db import models
+# from django.contrib.auth.models import User
+
+# class EmployeeLoginLogout(models.Model):
+#     employee = models.ForeignKey(User, on_delete=models.CASCADE)
+#     login_time = models.DateTimeField(null=True, blank=True)
+#     logout_time = models.DateTimeField(null=True, blank=True)
+    
+#     def __str__(self):
+#         return f"{self.employee.username} - Login: {self.login_time} Logout: {self.logout_time}"
 from django.db import models
 from django.contrib.auth.models import User
 
 class EmployeeLoginLogout(models.Model):
-    employee = models.ForeignKey(User, on_delete=models.CASCADE)
+    employee = models.ForeignKey("Employee", on_delete=models.CASCADE)
     login_time = models.DateTimeField(null=True, blank=True)
     logout_time = models.DateTimeField(null=True, blank=True)
-    
+
     def __str__(self):
-        return f"{self.employee.username} - Login: {self.login_time} Logout: {self.logout_time}"
+        return f"{self.employee.user.username} - Login: {self.login_time} Logout: {self.logout_time}"
 
 
 from django.db import models
@@ -113,3 +123,19 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"{self.sender.username} → {self.receiver.username}"
+
+class WorkFromHome(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ]
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    date = models.DateField()
+    reason = models.TextField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+    applied_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.employee.first_name} - {self.date}"

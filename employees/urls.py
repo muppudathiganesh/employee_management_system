@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
-from .views import chat_with_employee, send_message
+from .views import chat_with_employee, send_message,employee_attendance,employee_detail
+
+
+
 urlpatterns = [
     path('employees/', views.employee_list, name='employee_list'),
      path('payroll/', views.payroll_list, name='payroll_list'),
@@ -35,22 +38,38 @@ path('leave/apply/', views.apply_leave, name='apply_leave'),
 # urls.py
 path('leave/apply/<int:employee_id>/', views.apply_leave, name='apply_leave'),
 
-    path('leave/all/', views.leave_list, name='leave_list'),
-  path('employee/detail/', views.employee_detail, name='employee_detail'),
- path('logout/', views.logout_view, name='logout'),
+path('leave/all/', views.leave_list, name='leave_list'),
+path('employee/detail/', views.employee_detail, name='employee_detail'),
+
+
+path('logout/', views.logout_view, name='logout'),
 path('register/', views.register, name='register'),
 path('employee/dashboard/', views.employee_dashboard, name='employee_dashboard'),
 # ----meeting
   path('meeting_section/', views.meeting_section, name='meeting_section'),
-    path('schedule_meeting/', views.schedule_meeting, name='schedule_meeting'),
-#     path('employee_meetings/', views.employee_meetings, name='employee_meetings'),
+  path('schedule_meeting/', views.schedule_meeting, name='schedule_meeting'),
+# path('employee_meetings/', views.employee_meetings, name='employee_meetings'),
 # path('admin_meetings/', views.admin_meetings, name='admin_meetings'),
  path('meetings/', views.meetings_view, name='meetings_view'),
 #  chat---------------
 
-   path('chat/<int:employee_id>/', views.chat_with_employee, name='chat_with_employee'),
+path('chat/<int:employee_id>/', views.chat_with_employee, name='chat_with_employee'),
 path('send-message/', views.send_message, name='send_message'),
 path('chatbox/', views.chatbox, name='chatbox'),
 path('chat/admin/', views.admin_chat_list, name='admin_chat_list'),
+# wfh--------------------------
+path("work-from-home/", views.wfh_list, name="wfh_list"),
+path("apply-wfh/", views.apply_wfh, name="apply_wfh"),
+path("approve-wfh/<int:wfh_id>/", views.approve_wfh, name="approve_wfh"),
+path("reject-wfh/<int:wfh_id>/", views.reject_wfh, name="reject_wfh"),
+# in_on---------------------------------
+path("attendance-events/", views.attendance_events, name="attendance_events"),
+path('login-logout-report/', views.login_logout_report, name='login_logout_report'),
+
+path("my-attendance/", employee_attendance, name="employee_attendance"),
+path('my-profile/', views.my_profile, name='my_profile'),
+path("my-leaves/", views.employee_leave_list, name="employee_leave_list"),
+path('employee/leaves/', views.employee_leave_list, name='employee_leave_list'),
+
 
 ]

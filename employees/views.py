@@ -83,46 +83,8 @@ def delete_employee(request, pk):
     return render(request, 'employees/confirm_delete.html', {'employee': employee})
 
 
+# dashboard--------------------------------------
 
-# ------------------ Login View ------------------
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return redirect('dashboard')
-#         else:
-#             messages.error(request, "Invalid username or password!")
-
-#     return render(request, 'employees/login.html')
-
-
-# -----------------dashboard--------------
-# from django.shortcuts import render
-# from datetime import date
-# from .models import Employee, Department, Leave
-
-# def dashboard(request):
-#     total_employees = Employee.objects.count()
-#     on_leave_today = Leave.objects.filter(
-#         status='Approved',
-#         start_date__lte=date.today(),
-#         end_date__gte=date.today()
-#     ).count()
-#     total_departments = Department.objects.count()
-#     pending_approvals = Leave.objects.filter(status='Pending').count()
-   
-
-#     return render(request, 'employees/home.html', {
-#         'total_employees': total_employees,
-#         'on_leave_today': on_leave_today,
-#         'total_departments': total_departments,
-#         'pending_approvals': pending_approvals,
-       
-#     })
 from django.shortcuts import render
 from datetime import date
 from .models import Employee, Department, Leave, Attendance  # Ensure Attendance model exists
@@ -189,6 +151,10 @@ def employee_list(request):
         'leave_data': leave_data,
     })
 
+
+
+
+
 # ---------------------attendance------------
 from django.shortcuts import render
 from .models import Attendance
@@ -198,25 +164,99 @@ from .models import Attendance
 #     return render(request, 'employees/attendance_list.html', {'attendance': attendance})
 from django.shortcuts import render
 from .models import Attendance, Employee
+from django.contrib.auth.decorators import login_required
 
+
+# def attendance_list(request):
+#     q = request.GET.get('q', '')
+#     attendance = Attendance.objects.all()
+
+#     if q:
+#         attendance = attendance.filter(employee__first_name__icontains=q)
+
+#     employees = Employee.objects.all()  # ✅ Add this line
+
+#     return render(request, 'employees/attendance_list.html', {
+#         'attendance': attendance,
+#         'employees': employees,  # ✅ Pass to template
+#     })
+@login_required
 def attendance_list(request):
-    q = request.GET.get('q', '')
-    attendance = Attendance.objects.all()
+    attendance = Attendance.objects.select_related('employee').all().order_by('-date')
+    employees = Employee.objects.all()
+    q = request.GET.get("q", "")
 
     if q:
         attendance = attendance.filter(employee__first_name__icontains=q)
 
-    employees = Employee.objects.all()  # ✅ Add this line
-
-    return render(request, 'employees/attendance_list.html', {
-        'attendance': attendance,
-        'employees': employees,  # ✅ Pass to template
+    return render(request, "employees/attendance_list.html", {
+        "attendance": attendance,
+        "employees": employees
     })
 
+from django.contrib.auth.decorators import login_required
 
+
+
+@login_required
+def employee_attendance(request):
+    attendance = Attendance.objects.filter(employee=request.user.employee).order_by('-date')
+
+    return render(request, "employees/employee_attendance.html", {
+        "attendance": attendance,
+    })
+
+# leave_list-----------------------------
+# def leave_list(request):
+#     leaves = Leave.objects.select_related('employee').all()
+#     return render(request, 'employees/leave_list.html', {'leaves': leaves})
+# views.py
+# def leave_list(request):
+#     if request.user.is_superuser:
+#         # ADMIN → see all employees
+#         leaves = Leave.objects.all()
+#     else:
+#         # EMPLOYEE → see only their own leaves
+#         leaves = Leave.objects.filter(employee=request.user.employee)
+
+#     return render(request, "leave_list.html", {
+#         "leaves": leaves,
+#         "employees": Employee.objects.all() if request.user.is_superuser else None
+#     })
+def employee_dashboard(request):
+    employee = request.user.employee
+    leaves = Leave.objects.filter(employee=employee).order_by('-date_from')
+
+    return render(request, 'employees/employee_leave_list.html', {
+        'employee': employee,
+        'leaves': leaves
+    })
 def leave_list(request):
-    leaves = Leave.objects.select_related('employee').all()
+    leaves = Leave.objects.all().order_by('start_date')
     return render(request, 'employees/leave_list.html', {'leaves': leaves})
+@login_required
+def employee_leave_list(request):
+    # Only show logged-in employee leaves
+    if not hasattr(request.user, 'employee'):
+        return redirect('dashboard')
+
+    employee = request.user.employee
+    leaves = Leave.objects.filter(employee=employee).order_by('-start_date')
+
+    return render(request, "employees/employee_leave_list.html", {
+        "leaves": leaves,
+        "employee": employee
+    })
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from .models import Employee, Leave
+from django.contrib.auth.models import User
+
+
+
+
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Employee, Attendance, Leave
@@ -333,11 +373,11 @@ def apply_leave_all(request):
         )
 
         messages.success(request, "Leave applied successfully!")
-        return redirect("leave_list")
+        return redirect("employee_leave_list")
 
     employees = Employee.objects.all()
     leaves = Leave.objects.all()
-    return render(request, "employees/leave_list.html", {"employees": employees, "leaves": leaves})
+    return render(request, "employees/employee_leave_list.html", {"employees": employees, "leaves": leaves})
 
 
 
@@ -491,6 +531,8 @@ def export_payroll_pdf(request):
 
     p.save()
     return response
+# emp detail---------------------------------
+
 
 from django.shortcuts import render, get_object_or_404
 from .models import Employee, Leave, Payroll
@@ -624,31 +666,34 @@ def meeting_section(request):
 # ------------------------------
 # Schedule Meeting + Send Email
 # ------------------------------
+
+@login_required
 def schedule_meeting(request):
+    # Only superuser can schedule meeting
+    if not request.user.is_superuser:
+        return render(request, "employees/no_employee.html")
+
     if request.method == "POST":
         title = request.POST.get('title')
         datetime_value = request.POST.get('datetime')
         details = request.POST.get('details')
         employee_ids = request.POST.getlist('employees')
 
-        # Create meeting
         meeting = Meeting.objects.create(
             title=title,
             datetime=datetime_value,
             details=details
         )
         meeting.employees.set(employee_ids)
-        meeting.save()
 
-        # Get selected employees
+        # Email all selected employees
         selected_employees = Employee.objects.filter(id__in=employee_ids)
 
-        # Send email notifications
         for emp in selected_employees:
             if emp.email:
                 send_mail(
-                    subject=f"📅 New Meeting Scheduled: {title}",
-                    message=f"""
+                    f"📅 New Meeting Scheduled: {title}",
+                    f"""
 Dear {emp.first_name},
 
 A new meeting has been scheduled.
@@ -657,42 +702,43 @@ A new meeting has been scheduled.
 📅 Date & Time: {datetime_value}
 📝 Details: {details}
 
-Please attend on time.
-
 Regards,
 Admin
 """,
-                    from_email="muppuraj11@gmail.com",
-                    recipient_list=[emp.email],
+                    "muppuraj11@gmail.com",
+                    [emp.email],
                     fail_silently=True,
                 )
 
-        messages.success(request, "✅ Meeting scheduled successfully and notifications sent!")
+        messages.success(request, "Meeting scheduled successfully!")
         return redirect('dashboard')
 
-    # GET request: show meeting page
     employees = Employee.objects.all()
     return render(request, 'employees/meeting_section.html', {'employees': employees})
+
+
+
+# ------------------------------
+# Unified meetings view
+# ------------------------------
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Employee, Meeting
 from django.core.mail import send_mail
-
-# ------------------------------
-# Unified meetings view
-# ------------------------------
 @login_required
 def meetings_view(request):
-    if request.user.is_staff:
-        # admin
+    # ADMIN (superuser only)
+    if request.user.is_superuser:
         meetings = Meeting.objects.all().order_by('-datetime')
         return render(request, 'employees/meetings.html', {
             'meetings': meetings,
             'is_admin': True
         })
-    else:
-        # employee
+
+    # EMPLOYEE
+    if hasattr(request.user, "employee"):
         employee = request.user.employee
         meetings = employee.meetings.all().order_by('datetime')
         return render(request, 'employees/meetings.html', {
@@ -700,95 +746,11 @@ def meetings_view(request):
             'is_admin': False
         })
 
+    # No employee profile
+    return render(request, "employees/no_employee.html")
 
 
 
-# from django.shortcuts import get_object_or_404
-# from .models import Meeting
-# # def employee_meetings(request):
-# #     employee = get_object_or_404(Employee, user=request.user)
-# #     meetings = employee.meetings.all()
-# #     return render(request, 'employees/employee_meetings.html', {'meetings': meetings})
-# from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
-# from .models import Meeting, Employee
-
-# @login_required
-# def meetings_view(request):
-#     """
-#     Unified meeting view:
-#     - If employee: show only their meetings
-#     - If admin (staff): show all meetings
-#     """
-#     user = request.user
-
-#     if user.is_staff:
-#         # Admin sees all meetings
-#         meetings = Meeting.objects.all().order_by('-datetime')
-#         is_admin = True
-#         employee = None
-#     else:
-#         # Employee sees only their meetings
-#         try:
-#             employee = user.employee  # Assuming OneToOneField from Employee to User
-#             meetings = employee.meetings.all().order_by('datetime')
-#         except Employee.DoesNotExist:
-#             meetings = []
-#             employee = None
-#         is_admin = False
-
-#     return render(request, 'employees/meetings.html', {
-#         'meetings': meetings,
-#         'employee': employee,
-#         'is_admin': is_admin
-#     })
-
-# def employee_meetings(request):
-#     employee = Employee.objects.get(user=request.user)
-#     meetings = Meeting.objects.filter(employees=employee)
-#     return render(request, 'employees/employee_meeting.html', {'meetings': meetings})
-
-
-# def admin_meetings(request):
-#     meetings = Meeting.objects.all().order_by('-datetime')
-#     return render(request, 'employees/admin_meetings.html', {'meetings': meetings})
-# from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
-# from .models import Meeting, Employee
-
-# @login_required
-# def employee_meetings(request):
-#     try:
-#         employee = request.user.employee  # get Employee linked to the logged-in user
-#     except Employee.DoesNotExist:
-#         # If no employee record exists, return empty meetings
-#         return render(request, 'employees/employee_meetings.html', {'meetings': []})
-
-#     # Get only meetings that this employee is part of, ordered by datetime
-#     meetings = employee.meetings.all().order_by('datetime')
-
-#     return render(request, 'employees/employee_meetings.html', {
-#         'meetings': meetings,
-#         'employee': employee
-#     })
-
-
-
-# from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.models import User
-# from .models import Meeting, Employee
-
-# @login_required
-# def employee_meetings(request):
-#     try:
-#         employee = request.user.employee
-#     except Employee.DoesNotExist:
-#         return render(request, 'employees/employee_meetings.html', {'meetings': []})
-
-#     meetings = employee.meetings.all().order_by('datetime')
-
-#     return render(request, 'employees/employee_meetings.html', {'meetings': meetings})
 
 
 
@@ -856,3 +818,258 @@ def employee_dashboard(request):
     })
 def chatbox(request):
     return render(request, 'employees/chatbox.html')
+# wfh------------------------
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.utils import timezone
+from django.core.mail import send_mail
+from .models import WorkFromHome, Employee
+
+
+# -------------------------
+# LOGIN VIEW
+# -------------------------
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            if user.is_superuser:
+                return redirect('dashboard')        # Admin dashboard
+            else:
+                return redirect('employee_dashboard')
+
+        else:
+            messages.error(request, 'Invalid username or password')
+
+    return render(request, 'employees/login.html')
+
+
+
+# -------------------------
+# EMPLOYEE DASHBOARD
+# -------------------------
+def employee_dashboard(request):
+
+    if not hasattr(request.user, "employee"):
+        return render(request, "employees/no_employee.html")
+
+    employee = request.user.employee
+
+    recent_wfh = WorkFromHome.objects.filter(
+        employee=employee
+    ).order_by('-date')[:5]
+
+    return render(request, "employees/employee_dashboard.html", {
+        "recent_wfh": recent_wfh,
+    })
+
+
+
+# -------------------------
+# APPLY WFH
+# -------------------------
+def apply_wfh(request):
+
+    if not hasattr(request.user, "employee"):
+        return render(request, "employees/no_employee.html")
+
+    employee = request.user.employee
+
+    if request.method == 'POST':
+        date = request.POST['date']
+        reason = request.POST['reason']
+
+        wfh = WorkFromHome.objects.create(
+            employee=employee,
+            date=date,
+            reason=reason,
+            applied_on=timezone.now()
+        )
+
+        # -------------------------
+        # SEND EMAIL TO ADMIN
+        # -------------------------
+        send_mail(
+            subject="New Work From Home Request",
+            message=f"""
+Employee: {employee.first_name} {employee.last_name}
+Date: {date}
+Reason: {reason}
+            """,
+            from_email="yourgmail@gmail.com",
+            recipient_list=["muppuraj11@gmail.com"],
+        )
+
+        return redirect('wfh_list')
+
+    return render(request, "employees/apply_wfh.html")
+
+
+
+# -------------------------
+# APPROVE / REJECT WFH
+# -------------------------
+def approve_wfh(request, wfh_id):
+    wfh = WorkFromHome.objects.get(id=wfh_id)
+    wfh.status = "Approved"
+    wfh.save()
+
+    send_mail(
+        "WFH Approved",
+        f"Your WFH request on {wfh.date} is approved.",
+        "muppuraj11@gmail.com",
+        [wfh.employee.email],
+    )
+
+    return redirect("wfh_list")
+
+
+def reject_wfh(request, wfh_id):
+    wfh = WorkFromHome.objects.get(id=wfh_id)
+    wfh.status = "Rejected"
+    wfh.save()
+
+    send_mail(
+        "WFH Request Rejected",
+        f"Your WFH request on {wfh.date} is rejected.",
+        "muppuraj11@gmail.com",
+        [wfh.employee.email],
+    )
+
+    return redirect("wfh_list")
+
+
+
+# -------------------------
+# WFH LIST
+# -------------------------
+def wfh_list(request):
+
+    if request.user.is_superuser:
+        wfh = WorkFromHome.objects.all().order_by('-applied_on')
+
+    else:
+        if not hasattr(request.user, "employee"):
+            return render(request, "employees/no_employee.html")
+
+        wfh = WorkFromHome.objects.filter(
+            employee=request.user.employee
+        )
+
+    return render(request, "employees/wfh_list.html", {"wfh": wfh})
+# def wfh_list(request):
+#     if request.user.is_superuser:
+#         wfh = WorkFromHome.objects.all().order_by('-applied_on')
+#     else:
+#         if not hasattr(request.user, "employee"):
+#             return render(request, "employees/no_employee.html")
+
+#         wfh = WorkFromHome.objects.filter(
+#             employee=request.user.employee
+#         )
+
+#     return render(request, "employees/wfh_list.html", {"wfh": wfh})
+
+
+# calender in-on-----------------------------
+# views.py
+from django.http import JsonResponse
+from .models import EmployeeLoginLogout, Leave, WorkFromHome
+from django.contrib.auth.decorators import login_required
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import EmployeeLoginLogout, Leave, WorkFromHome, Employee
+
+@login_required
+def attendance_events(request):
+    user = request.user
+    try:
+        employee = Employee.objects.get(user=user)
+    except Employee.DoesNotExist:
+        return JsonResponse([], safe=False)  # No employee found
+
+    events = []
+
+    # Login/Logout as work range
+    attendance = EmployeeLoginLogout.objects.filter(employee=employee)
+    for a in attendance:
+        if a.login_time and a.logout_time:
+            events.append({
+                "title": "Work",
+                "start": a.login_time.isoformat(),
+                "end": a.logout_time.isoformat(),
+                "color": "#28a745"
+            })
+        else:
+            if a.login_time:
+                events.append({
+                    "title": "Login",
+                    "start": a.login_time.isoformat(),
+                    "color": "#28a745"
+                })
+            if a.logout_time:
+                events.append({
+                    "title": "Logout",
+                    "start": a.logout_time.isoformat(),
+                    "color": "#dc3545"
+                })
+
+    # Leave
+    leaves = Leave.objects.filter(employee=employee)
+    for leave in leaves:
+        if leave.start_date and leave.end_date:
+            events.append({
+                "title": "Leave",
+                "start": leave.start_date.isoformat(),
+                "end": leave.end_date.isoformat(),
+                "color": "#ff0000"
+            })
+
+    # WFH
+    wfh_events = WorkFromHome.objects.filter(employee=employee)
+    for w in wfh_events:
+        if w.date:
+            events.append({
+                "title": "WFH",
+                "start": w.date.isoformat(),
+                "color": "#f7c600"
+            })
+
+    print("Events:", events)  # debug
+    return JsonResponse(events, safe=False)
+
+from django.shortcuts import render
+from .models import EmployeeLoginLogout
+
+def login_logout_report(request):
+    records = EmployeeLoginLogout.objects.select_related('employee').order_by('-login_time')
+    return render(request, 'employees/login_logout_report.html', {'records': records})
+
+# my profile--------------------
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+# @login_required
+# def my_profile(request):
+#     employee = request.user.employee  # Get logged-in employee ONLY
+#     return render(request, 'employees/my_profile.html', {'employee': employee})
+@login_required
+def my_profile(request):
+    try:
+        employee = Employee.objects.get(user=request.user)
+    except Employee.DoesNotExist:
+        employee = None
+
+    return render(request, "employees/my_profile.html", {
+        "employee": employee,
+        "user": request.user
+    })
