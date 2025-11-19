@@ -1,13 +1,17 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Payroll - {{ employee.first_name }}</title>
+  <title>Add Payroll - {{ employee.first_name }}</title> --> 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
+   <!-- <style>
  body {
       font-family: "Poppins", sans-serif;
       /* ✅ Add your background image here */
@@ -64,12 +68,12 @@
     }
 
     /* Main Content */
-    .main-content {
+     .main-content {
       margin-left: 240px;
       padding: 30px;
-    }
+    } -->
 
-    @media (max-width: 991px) {
+    <!-- @media (max-width: 991px) {
       .sidebar {
         width: 100%;
         height: auto;
@@ -78,12 +82,22 @@
       .main-content {
         margin-left: 0;
       }
+    } -->
+       <!-- .main-content {
+      margin-left: 240px;
+      padding: 30px;
+    }  -->
+  <!-- </style> --> 
+   <!-- <style>
+    .main-content {
+      margin-left: 240px;
+      padding: 30px;
     }
-  </style>
-</head>
-<body>
+   </style> -->
+<!-- </head>
+<body> --> 
   <!-- Sidebar -->
-  <div class="sidebar">
+  <!-- <div class="sidebar">
     <h4>VETRI IT SOLUTIONS ADMIN</h4>
     <a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
     <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i>All Employees</a>
@@ -91,35 +105,35 @@
     <a href="{% url 'attendance_list' %}">📅 Attendance</a>
     <a href="{% url 'payroll_list' %}" class="active">💰 Payroll</a>
     <a href="{% url 'leave_list' %}">📅 Leave</a>
-  </div>
+  </div> -->
 
   <!-- Main Content -->
   <div class="main-content">
     <h3 class="mb-4">Add Payroll for {{ employee.first_name }} {{ employee.last_name }}</h3>
-    
-    <form method="POST" style="max-width: 600px;">
+   <div class="card shadow-sm p-4">
+    <form method="POST">
       {% csrf_token %}
-      <div class="mb-2">
+      <div class="mb-3">
         <label>Month</label>
         <input type="text" name="month" class="form-control" required>
       </div>
-      <div class="mb-2">
+      <div class="mb-3">
         <label>Basic Salary</label>
         <input type="number" name="basic_salary" class="form-control" required>
       </div>
-      <div class="mb-2">
+      <div class="mb-3">
         <label>HRA</label>
         <input type="number" name="hra" class="form-control" value="0">
       </div>
-      <div class="mb-2">
+      <div class="mb-3">
         <label>Allowances</label>
         <input type="number" name="allowances" class="form-control" value="0">
       </div>
-      <div class="mb-2">
+      <div class="mb-3">
         <label>Provident Fund</label>
         <input type="number" name="provident_fund" class="form-control" value="0">
       </div>
-      <div class="mb-2">
+      <div class="mb-3">
         <label>Tax</label>
         <input type="number" name="tax" class="form-control" value="0">
       </div>
@@ -128,7 +142,8 @@
       <a href="{% url 'payroll_list' %}" class="btn btn-secondary">Back to Payroll List</a>
     </form>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> -->
+{% endblock %}

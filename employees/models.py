@@ -130,3 +130,5 @@ class WorkFromHome(models.Model):
 
     def __str__(self):
         return f"{self.employee.first_name} - {self.date}"
+
+

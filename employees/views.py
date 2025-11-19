@@ -863,7 +863,7 @@ def employee_dashboard(request):
     })
 def chatbox(request):
     return render(request, 'employees/chatbox.html')
-# wfh------------------------
+# workfh------------------------
 
 
 from django.shortcuts import render, redirect
@@ -1261,6 +1261,5 @@ def apply_leave(request):
         return redirect("employee_leave_list")
 
     return redirect("employee_leave_list")
-
 
 
