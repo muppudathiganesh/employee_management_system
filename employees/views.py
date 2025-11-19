@@ -136,7 +136,7 @@ def add_department(request):
             return redirect('view_departments')
     return render(request, 'employees/add_department.html')
 
-# -----------------------leave---------
+# -----------------------list---------
 from django.shortcuts import render
 from .models import Employee, Attendance, Leave
 
@@ -158,28 +158,10 @@ def employee_list(request):
 # ---------------------attendance------------
 from django.shortcuts import render
 from .models import Attendance
-
-# def attendance_list(request):
-#     attendance = Attendance.objects.select_related('employee').all()
-#     return render(request, 'employees/attendance_list.html', {'attendance': attendance})
 from django.shortcuts import render
 from .models import Attendance, Employee
 from django.contrib.auth.decorators import login_required
 
-
-# def attendance_list(request):
-#     q = request.GET.get('q', '')
-#     attendance = Attendance.objects.all()
-
-#     if q:
-#         attendance = attendance.filter(employee__first_name__icontains=q)
-
-#     employees = Employee.objects.all()  # ✅ Add this line
-
-#     return render(request, 'employees/attendance_list.html', {
-#         'attendance': attendance,
-#         'employees': employees,  # ✅ Pass to template
-#     })
 @login_required
 def attendance_list(request):
     attendance = Attendance.objects.select_related('employee').all().order_by('-date')
@@ -194,9 +176,9 @@ def attendance_list(request):
         "employees": employees
     })
 
+
+
 from django.contrib.auth.decorators import login_required
-
-
 
 @login_required
 def employee_attendance(request):
@@ -223,40 +205,36 @@ def employee_attendance(request):
 #         "leaves": leaves,
 #         "employees": Employee.objects.all() if request.user.is_superuser else None
 #     })
-def employee_dashboard(request):
-    employee = request.user.employee
-    leaves = Leave.objects.filter(employee=employee).order_by('-date_from')
+# def employee_dashboard(request):
+#     employee = request.user.employee
+#     leaves = Leave.objects.filter(employee=employee).order_by('-date_from')
 
-    return render(request, 'employees/employee_leave_list.html', {
-        'employee': employee,
-        'leaves': leaves
-    })
-def leave_list(request):
-    leaves = Leave.objects.all().order_by('start_date')
-    return render(request, 'employees/leave_list.html', {'leaves': leaves})
-@login_required
-def employee_leave_list(request):
-    # Only show logged-in employee leaves
-    if not hasattr(request.user, 'employee'):
-        return redirect('dashboard')
+#     return render(request, 'employees/employee_leave_list.html', {
+#         'employee': employee,
+#         'leaves': leaves
+#     })
+# def leave_list(request):
+#     leaves = Leave.objects.all().order_by('start_date')
+#     return render(request, 'employees/leave_list.html', {'leaves': leaves})
+# @login_required
+# def employee_leave_list(request):
+#     # Only show logged-in employee leaves
+#     if not hasattr(request.user, 'employee'):
+#         return redirect('dashboard')
 
-    employee = request.user.employee
-    leaves = Leave.objects.filter(employee=employee).order_by('-start_date')
+#     employee = request.user.employee
+#     leaves = Leave.objects.filter(employee=employee).order_by('-start_date')
 
-    return render(request, "employees/employee_leave_list.html", {
-        "leaves": leaves,
-        "employee": employee
-    })
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
+#     return render(request, "employees/employee_leave_list.html", {
+#         "leaves": leaves,
+#         "employee": employee
+#     })
+# from django.contrib.auth.decorators import login_required
+# from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib import messages
-from .models import Employee, Leave
-from django.contrib.auth.models import User
-
-
-
-
+# from django.contrib import messages
+# from .models import Employee, Leave
+# from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Employee, Attendance, Leave
@@ -271,17 +249,32 @@ def mark_attendance(request, employee_id):
         messages.success(request, f"Attendance marked for {employee.first_name}.")
         return redirect('employee_list')
 
-def apply_leave(request, employee_id):
-    employee = get_object_or_404(Employee, id=employee_id)
-    if request.method == 'POST':
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
-        reason = request.POST.get('reason')
-        Leave.objects.create(employee=employee, start_date=start_date, end_date=end_date, reason=reason, status='Pending')
-        messages.success(request, f"Leave applied for {employee.first_name}.")
-        return redirect('employee_list')
 
-# --------------------approval email ---------------
+
+# from django.shortcuts import render, redirect, get_object_or_404
+# from .models import Employee, Attendance, Leave
+# from django.contrib import messages
+
+# def mark_attendance(request, employee_id):
+#     employee = get_object_or_404(Employee, id=employee_id)
+#     if request.method == 'POST':
+#         status = request.POST.get('status')
+#         date = request.POST.get('date')
+#         Attendance.objects.create(employee=employee, status=status, date=date)
+#         messages.success(request, f"Attendance marked for {employee.first_name}.")
+#         return redirect('employee_list')
+
+# def apply_leave(request, employee_id):
+#     employee = get_object_or_404(Employee, id=employee_id)
+#     if request.method == 'POST':
+#         start_date = request.POST.get('start_date')
+#         end_date = request.POST.get('end_date')
+#         reason = request.POST.get('reason')
+#         Leave.objects.create(employee=employee, start_date=start_date, end_date=end_date, reason=reason, status='Pending')
+#         messages.success(request, f"Leave applied for {employee.first_name}.")
+#         return redirect('employee_list')
+
+# # --------------------approval email ---------------
 
 
 from django.contrib.auth.decorators import user_passes_test
@@ -325,7 +318,7 @@ def reject_leave(request, leave_id):
     messages.warning(request, f"Leave for {leave.employee.first_name} rejected.")
     return redirect("leave_list")
 
-# --------------------------mark att-----------------
+# # --------------------------mark att-----------------
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Employee, Attendance
@@ -347,83 +340,135 @@ def mark_attendance_all(request):
 
 
 
-def leave_list(request):
-    leaves = Leave.objects.select_related('employee').all()
-    employees = Employee.objects.all()  # 👈 add this line
-    return render(request, 'employees/leave_list.html', {'leaves': leaves, 'employees': employees})
+# def leave_list(request):
+#     leaves = Leave.objects.select_related('employee').all()
+#     employees = Employee.objects.all()  # 👈 add this line
+#     return render(request, 'employees/leave_list.html', {'leaves': leaves, 'employees': employees})
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Employee, Leave
+# from django.shortcuts import render, redirect
+# from django.contrib import messages
+# from .models import Employee, Leave
 
-def apply_leave_all(request):
-    if request.method == "POST":
-        employee_id = request.POST.get("employee_id")
-        from_date = request.POST.get("from_date")
-        to_date = request.POST.get("to_date")
-        reason = request.POST.get("reason")
+# def apply_leave_all(request):
+#     if request.method == "POST":
+#         employee_id = request.POST.get("employee_id")
+#         from_date = request.POST.get("from_date")
+#         to_date = request.POST.get("to_date")
+#         reason = request.POST.get("reason")
 
-        employee = Employee.objects.get(id=employee_id)
-        Leave.objects.create(
-            employee=employee,
-            start_date=from_date,
-            end_date=to_date,
-            reason=reason,
-            status="Pending"
-        )
+#         employee = Employee.objects.get(id=employee_id)
+#         Leave.objects.create(
+#             employee=employee,
+#             start_date=from_date,
+#             end_date=to_date,
+#             reason=reason,
+#             status="Pending"
+#         )
 
-        messages.success(request, "Leave applied successfully!")
-        return redirect("employee_leave_list")
+#         messages.success(request, "Leave applied successfully!")
+#         return redirect("employee_leave_list")
 
-    employees = Employee.objects.all()
-    leaves = Leave.objects.all()
-    return render(request, "employees/employee_leave_list.html", {"employees": employees, "leaves": leaves})
+#     employees = Employee.objects.all()
+#     leaves = Leave.objects.all()
+#     return render(request, "employees/employee_leave_list.html", {"employees": employees, "leaves": leaves})
+
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib import messages
+# from django.contrib.auth.models import User
+# from django.core.mail import send_mail
+# from django.conf import settings
+# from .models import Employee, Leave
+
+# def apply_leave(request):
+#     if request.method == "POST":
+#         employee_id = request.POST.get("employee_id")
+#         from_date = request.POST.get("from_date")
+#         to_date = request.POST.get("to_date")
+#         reason = request.POST.get("reason")
+
+#         employee = get_object_or_404(Employee, id=employee_id)
+
+#         leave = Leave.objects.create(
+#             employee=employee,
+#             start_date=from_date,
+#             end_date=to_date,
+#             reason=reason,
+#             status="Pending",
+#         )
+
+#         # Email to admins
+#         admin_emails = list(User.objects.filter(is_staff=True).values_list("email", flat=True))
+
+#         if admin_emails:  # Avoid sending to empty list
+#             send_mail(
+#                 subject=f"Leave Request from {employee.first_name} {employee.last_name}",
+#                 message=f"""
+# Employee: {employee.first_name} {employee.last_name}
+# From: {from_date}
+# To: {to_date}
+# Reason: {reason}
+# Status: Pending
+#                 """,
+#                 from_email=settings.DEFAULT_FROM_EMAIL,
+#                 recipient_list=admin_emails,
+#                 fail_silently=False,  # SEE ERRORS IF EMAIL FAILS
+#             )
+
+#         messages.success(request, "Leave applied successfully! Admins notified.")
+#         return redirect("leave_list")
+
+#     employees = Employee.objects.all()
+#     leaves = Leave.objects.all()
+
+#     return render(request, "employees/leave_list.html", {
+#         "employees": employees,
+#         "leaves": leaves,
+#     })
 
 
 
+# from django.core.mail import send_mail
+# from django.conf import settings
+# from django.contrib.auth.models import User
 
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.auth.models import User
+# def apply_leave(request):
+#     if request.method == "POST":
+#         employee_id = request.POST.get("employee_id")
+#         from_date = request.POST.get("from_date")
+#         to_date = request.POST.get("to_date")
+#         reason = request.POST.get("reason")
 
-def apply_leave(request):
-    if request.method == "POST":
-        employee_id = request.POST.get("employee_id")
-        from_date = request.POST.get("from_date")
-        to_date = request.POST.get("to_date")
-        reason = request.POST.get("reason")
+#         employee = Employee.objects.get(id=employee_id)
+#         leave = Leave.objects.create(
+#             employee=employee,
+#             start_date=from_date,
+#             end_date=to_date,
+#             reason=reason,
+#             status="Pending"
+#         )
 
-        employee = Employee.objects.get(id=employee_id)
-        leave = Leave.objects.create(
-            employee=employee,
-            start_date=from_date,
-            end_date=to_date,
-            reason=reason,
-            status="Pending"
-        )
+#         # Send email to all admins
+#         admin_emails = User.objects.filter(is_staff=True).values_list('email', flat=True)
+#         send_mail(
+#             subject=f"Leave Request from {employee.first_name} {employee.last_name}",
+#             message=f"""
+#             Employee: {employee.first_name} {employee.last_name}
+#             From: {from_date}
+#             To: {to_date}
+#             Reason: {reason}
+#             Status: Pending
+#             """,
+#             from_email=settings.DEFAULT_FROM_EMAIL,
+#             recipient_list=admin_emails,
+#             fail_silently=True
+#         )
 
-        # Send email to all admins
-        admin_emails = User.objects.filter(is_staff=True).values_list('email', flat=True)
-        send_mail(
-            subject=f"Leave Request from {employee.first_name} {employee.last_name}",
-            message=f"""
-            Employee: {employee.first_name} {employee.last_name}
-            From: {from_date}
-            To: {to_date}
-            Reason: {reason}
-            Status: Pending
-            """,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=admin_emails,
-            fail_silently=True
-        )
+#         messages.success(request, "Leave applied successfully! Admins have been notified.")
+#         return redirect("leave_list")
 
-        messages.success(request, "Leave applied successfully! Admins have been notified.")
-        return redirect("leave_list")
-
-    employees = Employee.objects.all()
-    leaves = Leave.objects.all()
-    return render(request, "employees/leave_list.html", {"employees": employees, "leaves": leaves})
+#     employees = Employee.objects.all()
+#     leaves = Leave.objects.all()
+#     return render(request, "employees/leave_list.html", {"employees": employees, "leaves": leaves})
 
         
 from django.shortcuts import render, redirect, get_object_or_404
@@ -965,18 +1010,7 @@ def wfh_list(request):
         )
 
     return render(request, "employees/wfh_list.html", {"wfh": wfh})
-# def wfh_list(request):
-#     if request.user.is_superuser:
-#         wfh = WorkFromHome.objects.all().order_by('-applied_on')
-#     else:
-#         if not hasattr(request.user, "employee"):
-#             return render(request, "employees/no_employee.html")
 
-#         wfh = WorkFromHome.objects.filter(
-#             employee=request.user.employee
-#         )
-
-#     return render(request, "employees/wfh_list.html", {"wfh": wfh})
 
 
 # calender in-on-----------------------------
@@ -1007,20 +1041,23 @@ def attendance_events(request):
                 "title": "Work",
                 "start": a.login_time.isoformat(),
                 "end": a.logout_time.isoformat(),
-                "color": "#28a745"
+                "color": "#28a745",
+                 "type": "attendance",
             })
         else:
             if a.login_time:
                 events.append({
                     "title": "Login",
                     "start": a.login_time.isoformat(),
-                    "color": "#28a745"
+                    "color": "#28a745",
+                     "type": "attendance",
                 })
             if a.logout_time:
                 events.append({
                     "title": "Logout",
                     "start": a.logout_time.isoformat(),
-                    "color": "#dc3545"
+                    "color": "#dc3545",
+                     "type": "attendance",
                 })
 
     # Leave
@@ -1031,7 +1068,8 @@ def attendance_events(request):
                 "title": "Leave",
                 "start": leave.start_date.isoformat(),
                 "end": leave.end_date.isoformat(),
-                "color": "#ff0000"
+                "color": "#ff0000",
+                 
             })
 
     # WFH
@@ -1046,6 +1084,90 @@ def attendance_events(request):
 
     print("Events:", events)  # debug
     return JsonResponse(events, safe=False)
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import EmployeeLoginLogout, Leave, WorkFromHome, Employee
+
+
+@login_required
+def attendance_events(request):
+    user = request.user
+    
+    # Ensure employee exists
+    try:
+        employee = Employee.objects.get(user=user)
+    except Employee.DoesNotExist:
+        return JsonResponse([], safe=False)
+
+    events = []
+
+    # ----------------------
+    # Attendance (Login & Logout)
+    # ----------------------
+    attendance = EmployeeLoginLogout.objects.filter(employee=employee)
+
+    for a in attendance:
+        if a.login_time and a.logout_time:
+            # Full work range
+            events.append({
+                "title": "Work",
+                "start": a.login_time.isoformat(),
+                "end": a.logout_time.isoformat(),
+                "color": "#28a745",
+                "type": "attendance",
+                "allDay": False
+            })
+        else:
+            # Login only
+            if a.login_time:
+                events.append({
+                    "title": "Login",
+                    "start": a.login_time.isoformat(),
+                    "color": "#28a745",
+                    "type": "attendance",
+                    "allDay": False
+                })
+            # Logout only
+            if a.logout_time:
+                events.append({
+                    "title": "Logout",
+                    "start": a.logout_time.isoformat(),
+                    "color": "#dc3545",
+                    "type": "attendance",
+                    "allDay": False
+                })
+
+    # ----------------------
+    # Leave
+    # ----------------------
+    leaves = Leave.objects.filter(employee=employee)
+    for leave in leaves:
+        if leave.start_date and leave.end_date:
+            events.append({
+                "title": "Leave",
+                "start": leave.start_date.isoformat(),
+                "end": leave.end_date.isoformat(),
+                "color": "#ff0000",
+                "type": "leave",
+                "allDay": True
+            })
+
+    # ----------------------
+    # Work From Home
+    # ----------------------
+    wfh_events = WorkFromHome.objects.filter(employee=employee)
+    for w in wfh_events:
+        if w.date:
+            events.append({
+                "title": "WFH",
+                "start": w.date.isoformat(),
+                "color": "#f7c600",
+                "type": "wfh",
+                "allDay": True
+            })
+
+    return JsonResponse(events, safe=False)
+
 
 from django.shortcuts import render
 from .models import EmployeeLoginLogout
@@ -1073,3 +1195,72 @@ def my_profile(request):
         "employee": employee,
         "user": request.user
     })
+# leave----------------------
+def leave_list(request):
+    if request.user.is_superuser:
+        leaves = Leave.objects.all().order_by('-id')
+        employees = Employee.objects.all()
+    else:
+        employee = request.user.employee
+        leaves = Leave.objects.filter(employee=employee)
+        employees = None  # no dropdown
+
+    return render(request, 'employees/leave_list.html', {
+        'leaves': leaves,
+        'employees': employees
+    })
+
+
+@login_required
+def employee_leave_list(request):
+    employee = request.user.employee
+    leaves = Leave.objects.filter(employee=employee).order_by('-id')
+
+    return render(request, 'employees/employee_leave_list.html', {
+        "leaves": leaves
+    })
+@login_required
+def apply_leave(request):
+    employee = request.user.employee
+
+    if request.method == "POST":
+        start = request.POST.get("start_date")
+        end = request.POST.get("end_date")
+        reason = request.POST.get("reason")
+
+        if not start or not end:
+            messages.error(request, "Start and End dates are required.")
+            return redirect("employee_leave_list")
+
+        Leave.objects.create(
+            employee=employee,
+            start_date=start,
+            end_date=end,
+            reason=reason
+        )
+
+        # Email to admin
+        employee_name = f"{employee.first_name} {employee.last_name}"
+        subject = f"Leave Request from {employee_name}"
+        message = (
+            f"Employee: {employee_name}\n"
+            f"From: {start}\n"
+            f"To: {end}\n"
+            f"Reason: {reason}\n"
+        )
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [settings.ADMIN_EMAIL],
+            fail_silently=False,
+        )
+
+        messages.success(request, "Leave request submitted!")
+        return redirect("employee_leave_list")
+
+    return redirect("employee_leave_list")
+
+
+

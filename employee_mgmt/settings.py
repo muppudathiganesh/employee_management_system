@@ -142,6 +142,7 @@ EMAIL_HOST_USER = 'muppuraj11@gmail.com'
 EMAIL_HOST_PASSWORD = 'bcxd wkux sbqn pfeu'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+ADMIN_EMAIL = 'muppuraj11@gmail.com'
 
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'

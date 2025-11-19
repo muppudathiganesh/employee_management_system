@@ -75,16 +75,7 @@ class Payroll(models.Model):
     def __str__(self):
         return f"{self.employee.first_name} - {self.month}"
     
-# from django.db import models
-# from django.contrib.auth.models import User
 
-# class EmployeeLoginLogout(models.Model):
-#     employee = models.ForeignKey(User, on_delete=models.CASCADE)
-#     login_time = models.DateTimeField(null=True, blank=True)
-#     logout_time = models.DateTimeField(null=True, blank=True)
-    
-#     def __str__(self):
-#         return f"{self.employee.username} - Login: {self.login_time} Logout: {self.logout_time}"
 from django.db import models
 from django.contrib.auth.models import User
 

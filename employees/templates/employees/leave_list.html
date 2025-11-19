@@ -227,7 +227,7 @@
         <form method="POST" action="{% url 'apply_leave' %}">
           {% csrf_token %}
       
-
+<!-- 
           <div class="mb-3 text-black ">
             <label>Employee:</label>
             <select name="employee_id" class="form-control" required>
@@ -235,7 +235,20 @@
               <option value="{{ emp.id }}">{{ emp.first_name }} {{ emp.last_name }}</option>
               {% endfor %}
             </select>
-          </div> 
+          </div>  -->
+          {% if user.is_superuser %}
+<div class="mb-3 text-black">
+    <label>Employee:</label>
+    <select name="employee_id" class="form-control" required>
+        {% for emp in employees %}
+        <option value="{{ emp.id }}">{{ emp.first_name }} {{ emp.last_name }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% else %}
+<input type="hidden" name="employee_id" value="{{ request.user.employee.id }}">
+{% endif %}
+
           <div class="mb-3 text-black">
             <label>From Date:</label>
             <input type="date" name="from_date" class="form-control" required>

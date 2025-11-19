@@ -10,6 +10,7 @@
   <!-- Bootstrap CSS & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
     body {
@@ -33,7 +34,8 @@
       position: fixed;
       top: 0;
       left: 0;
-      background-color:rgb(53, 148, 53);
+      /* background-color:rgb(53, 148, 53); */
+       background-color: #2ECC71; /* Vetri Green */
       color: white;
       padding-top: 30px;
       transition: left 0.3s ease;
@@ -58,7 +60,8 @@
     }
 
     .sidebar a:hover, .sidebar a.active {
-      background-color: gray;
+      /* background-color: gray; */
+        background-color: #0A1A5B; /* Navy Blue */
       border-left: 4px solid white;
     }
 
@@ -122,10 +125,11 @@
 
     .dashboard-cards .card:hover { transform: translateY(-5px); }
 
-    .bg-orange { background-color: #fd7e14; }
-    .bg-blue { background-color: #0d6efd; }
-    .bg-green { background-color: #198754; }
-    .bg-teal { background-color: #20c997; }
+    .bg-teal  { background-color: #2ECC71; }  /* Green */
+.bg-blue  { background-color: #0A1A5B; }  /* Navy */
+.bg-green { background-color: #1B5E20; }  /* Dark Green */
+.bg-olive { background-color: #004D40; }  /* Teal Dark */
+
 
     canvas { max-width: 320px; width: 100%; }
 
@@ -249,6 +253,18 @@ html, body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }
+/* .card {
+    background-color: #2ECC71 !important;
+    color: white;
+} */
+/* .card {
+    background-color: #0A1A5B !important;
+    color: white;
+} */
+.card {
+    background: linear-gradient(45deg, #2ECC71, #0A1A5B) !important;
+    color: white;
+}
 
   </style>
 </head>
@@ -259,8 +275,8 @@ html, body {
   <div class="container-fluid px-2">
     <!-- Brand -->
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{% static 'images/Screenshot 2025-11-08 113901.png' %}" width="38" height="38" class="rounded-circle me-2">
-      <span class="fw-bold text-success fs-5">MORTZA</span>
+      <img src="{% static 'images/Screenshot 2025-11-19 103138.png' %}" width="150" height="60" class="rounded-circle me-2">
+      <!-- <span class="fw-bold text-success fs-5">MORTZA</span> -->
     </a>
 
     <!-- Toggle Button -->
@@ -354,7 +370,7 @@ html, body {
       </div>
 
       <div class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-teal p-3">
+        <div class="card bg-blue p-3">
           <i class="bi bi-calendar2-check-fill fs-1 mb-2"></i>
           <h3>On Leave Today</h3>
           <h2>{{ on_leave_today }}</h2>
@@ -363,7 +379,7 @@ html, body {
       </div>
 
       <div class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-teal p-3 ">
+        <div class="card bg-green p-3 ">
           <i class="bi bi-building fs-1 mb-2"></i>
           <h3>Total Departments</h3>
           <h2>{{ total_departments }}</h2>
@@ -372,7 +388,7 @@ html, body {
       </div>
 
       <div class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-teal p-3">
+        <div class="card bg-olive p-3">
           <i class="bi bi-hourglass-split fs-1 mb-2"></i>
           <h3>Pending Approvals</h3>
           <h2>{{ pending_approvals }}</h2>
@@ -382,7 +398,7 @@ html, body {
     </div>
 
     <!-- Charts and News -->
-    <div class="row mt-5">
+    <!-- <div class="row mt-5">
       <div class="col-lg-6 mb-4">
         <div class="bg-white p-4 rounded shadow">
           <h1 class="text-center mb-4 text-primary">📢 Latest Office News</h1>
@@ -396,7 +412,34 @@ html, body {
             </div>
           </div>
         </div>
+      </div> -->
+      <div class="row mt-5">
+  <div class="col-lg-6 mb-4">
+    <div class="card news-card text-white p-4 rounded shadow-lg">
+      <h1 class="mb-4">📢 Latest Office News</h1>
+      <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
+        <div class="carousel-inner text-center">
+          <div class="carousel-item active">
+            <p class="fs-5"><strong>🎉 Employee of the Month:</strong><br>Rajesh Kumar (Sales)</p>
+          </div>
+          <div class="carousel-item">
+            <p class="fs-5"><strong>📅 Holiday:</strong><br>Diwali – Nov 10 (Saturday)</p>
+          </div>
+          <div class="carousel-item">
+            <p class="fs-5"><strong>🏆 Team Achievement:</strong><br>CRM Automation Completed!</p>
+          </div>
+          <div class="carousel-item">
+            <p class="fs-5"><strong>💬 Staff Meeting:</strong><br>Monday 10 AM</p>
+          </div>
+          <div class="carousel-item">
+            <p class="fs-5"><strong>🎂 Birthdays:</strong><br>Priya & Naveen 🎈</p>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+
+
 
      <div class="col-lg-6 mb-4 text-center">
   <h4 class="text-center mb-4 text-success fw-bold">Today's Attendance Overview</h4>
@@ -410,11 +453,11 @@ html, body {
 <section id="about" class="about-section mt-5 p-4 rounded shadow-lg bg-white" data-aos="fade-up">
 
   <h2 class="text-center text-success mb-4 fw-bold" data-aos="zoom-in">
-    <i class="bi bi-building me-2"></i>About Mortza
+    <i class="bi bi-building me-2"></i>About vetri
   </h2>
 
   <p class="fs-5 text-center text-muted mb-4 px-3" data-aos="fade-up" data-aos-delay="100">
-    <strong>Mortza </strong> is a modern HR solution crafted to simplify employee
+    <strong>Vetri </strong> is a modern HR solution crafted to simplify employee
     data management, attendance tracking, payroll generation, and performance monitoring.
     Built with cutting-edge technologies and a focus on user experience, it enables businesses
     to handle HR operations efficiently and transparently.
@@ -498,38 +541,69 @@ html, body {
 
 
 
-  <!-- 🟢 Contact Section -->
-<div class="text-center my-5 py-5" id="contact" data-aos="fade-up" data-aos-delay="200">
-  <!-- Company Logo -->
-  <img src="{% static 'images/Screenshot 2025-11-08 113901.png' %}" 
-       alt="MORTZA Logo"
-       class="img-fluid mb-4"
-       style="height: 200px; width: auto;">
-
-  <!-- Company Name -->
-  <h2 class="fw-bold text-success mb-3" style="letter-spacing: 2px;">MORTZA</h2>
-
-  <!-- Address / Contact Details -->
-  <p class="text-secondary mb-1 fs-5">
-    No. 14, Tech Park, Bangalore, India
-  </p>
-  <p class="text-secondary mb-1 fs-5">
-    📞 +91 98765 43210
-  </p>
-  <p class="text-secondary fs-5">
-    ✉️ contact@mortza.com
-  </p>
-</div>
-
-
-</div>
-
-  </div>
   
+  <!-- 🟢 Contact Section -->
+<div class="container my-5 py-5" id="contact" data-aos="fade-up" data-aos-delay="200">
+
+    <!-- Company Logo -->
+    <div class="text-center mb-4">
+        <img src="{% static 'images/Screenshot 2025-11-19 103138.png' %}"
+             
+             class="img-fluid"
+             style="height: 200px; width: auto;">
+    </div>
+
+    <!-- 3 Contact Boxes -->
+    <div class="row text-center g-4">
+
+        <!-- Address Box -->
+        <div class="col-md-4">
+            <div class="p-4 border rounded shadow-sm bg-light">
+                <div class="mb-2">
+                    <i class="bi bi-geo-alt-fill text-danger fs-1"></i>
+                </div>
+                <h5 class="fw-bold">ADDRESS</h5>
+                <p class="text-secondary mb-0">
+                 SURANDAI BUS STAND BACKSIDE,
+SURANDAI, TENKASI – 627 859
+                </p>
+            </div>
+        </div>
+
+        <!-- Phone Box -->
+        <div class="col-md-4">
+            <div class="p-4 border rounded shadow-sm bg-light">
+                <div class="mb-2">
+                    <i class="bi bi-telephone-fill text-danger fs-1"></i>
+                </div>
+                <h5 class="fw-bold">PHONE NUMBER</h5>
+                <p class="text-secondary mb-0">
+                    8438558527<br>
+8438164827
+                </p>
+            </div>
+        </div>
+
+        <!-- Email Box -->
+        <div class="col-md-4">
+            <div class="p-4 border rounded shadow-sm bg-light">
+                <div class="mb-2">
+                    <i class="bi bi-envelope-fill text-danger fs-1"></i>
+                </div>
+                <h5 class="fw-bold">EMAIL <br>ADDRESS</h5>
+                <p class="text-secondary mb-0 text-break">
+                 vetritechnologysolutions@gmail.com
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
   <!-- Footer -->
   <footer class="text-center py-3">
-    <strong>Powerded by:</strong> <span class="text-success">Vetri IT Solutions</span> | © 2025 Mortza EMS
+    <strong>Powerded by:</strong> <span class="text-success">VETRI IT SYSTEM</span> | © 2025 VETRI EMS
   </footer>
 
 

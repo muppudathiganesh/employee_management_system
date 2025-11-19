@@ -36,7 +36,7 @@ urlpatterns = [
   # urls.py
 path('leave/apply/', views.apply_leave, name='apply_leave'),
 # urls.py
-path('leave/apply/<int:employee_id>/', views.apply_leave, name='apply_leave'),
+# path('leave/apply/<int:employee_id>/', views.apply_leave, name='apply_leave'),
 
 path('leave/all/', views.leave_list, name='leave_list'),
 path('employee/detail/', views.employee_detail, name='employee_detail'),
