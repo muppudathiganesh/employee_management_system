@@ -71,5 +71,8 @@ path('my-profile/', views.my_profile, name='my_profile'),
 path("my-leaves/", views.employee_leave_list, name="employee_leave_list"),
 path('employee/leaves/', views.employee_leave_list, name='employee_leave_list'),
 
-
+   # Password reset flow
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('verify-otp/', views.verify_otp, name='verify_otp'),
+    path('reset-password/', views.reset_password, name='reset_password'),
 ]

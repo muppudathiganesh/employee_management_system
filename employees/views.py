@@ -1263,3 +1263,112 @@ def apply_leave(request):
     return redirect("employee_leave_list")
 
 
+# log_reg-----------------------
+
+
+
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from .models import PasswordResetOTP
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        users = User.objects.filter(email=email)  # use filter instead of get
+        
+        if users.exists():
+            user = users.first()  # pick the first user with that email
+            otp = PasswordResetOTP.generate_otp()
+            PasswordResetOTP.objects.create(user=user, otp=otp)
+            
+            send_mail(
+                'Password Reset OTP',
+                f'Your OTP is {otp}',
+                'noreply@example.com',
+                [email],
+                fail_silently=False
+            )
+            
+            messages.success(request, "OTP sent to your email")
+            request.session['reset_user'] = user.id
+            return redirect('verify_otp')
+        else:
+            messages.error(request, "Email not registered")
+    
+    return render(request, 'employees/forgot_password.html')
+
+from datetime import timedelta
+from django.utils import timezone
+
+
+def verify_otp(request):
+    user_id = request.session.get('reset_user')
+    user = User.objects.get(id=user_id)
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        otp_obj = PasswordResetOTP.objects.filter(user=user, otp=otp,
+                                                  created_at__gte=timezone.now()-timedelta(minutes=10)).first()
+        if otp_obj:
+            return redirect('reset_password')
+        else:
+            messages.error(request, "Invalid or expired OTP")
+    return render(request, 'employees/verify_otp.html')
+
+def reset_password(request):
+    user_id = request.session.get('reset_user')
+    user = User.objects.get(id=user_id)
+    if request.method == 'POST':
+        p1 = request.POST.get('password1')
+        p2 = request.POST.get('password2')
+        if p1 == p2:
+            user.set_password(p1)
+            user.save()
+            messages.success(request, "Password reset successful!")
+            return redirect('login')
+        else:
+            messages.error(request, "Passwords do not match")
+    return render(request, 'employees/reset_password.html')
+
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from .models import Employee
+
+
+def register(request):
+    if request.method == "POST":
+        full_name = request.POST['full_name']
+        email = request.POST['email']
+        username = request.POST['username']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            messages.error(request, "Passwords do not match.")
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return redirect('register')
+
+        # Create user
+        user = User.objects.create_user(
+            username=username,
+            password=password1,
+            email=email,
+            first_name=full_name
+        )
+
+        # 🔥 Create employee profile (required)
+        Employee.objects.create(
+            user=user,
+            date_joined=timezone.now()
+        )
+
+        messages.success(request, "Registration successful! Please sign in.")
+        return redirect('login')
+
+    return render(request, 'employees/register.html')

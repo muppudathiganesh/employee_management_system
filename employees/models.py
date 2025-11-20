@@ -131,4 +131,16 @@ class WorkFromHome(models.Model):
     def __str__(self):
         return f"{self.employee.first_name} - {self.date}"
 
+from django.db import models
+from django.contrib.auth.models import User
+import random
+
+class PasswordResetOTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @staticmethod
+    def generate_otp():
+        return str(random.randint(100000, 999999))
 
