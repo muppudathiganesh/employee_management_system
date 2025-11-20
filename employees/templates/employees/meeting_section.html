@@ -23,6 +23,9 @@
   <label>Details</label>
   <textarea name="details" class="form-control" rows="3" required></textarea>
 
+<label>Meeting Link (Google Meet / Zoom / Teams)</label>
+<input type="url" name="meeting_link" class="form-control" placeholder="https://meet.google.com/..." required>
+
   <label>Select Employees</label>
   <select name="employees" class="form-select" multiple required>
     {% for emp in employees %}

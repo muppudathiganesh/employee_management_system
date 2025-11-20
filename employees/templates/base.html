@@ -69,7 +69,7 @@
   
   <div class="sidebar" id="sidebar">
      <button class="close-btn" onclick="toggleSidebar()">&times;</button>
-    <h4>VETRI</h4>
+   <h4 style="color: navy; font-size: large;">VETRI</h4>
     {% if request.user.is_superuser %}
       <a href="{% url 'dashboard' %}">Dashboard</a>
       <a href="{% url 'employee_list' %}">All Employees</a>

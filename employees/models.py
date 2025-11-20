@@ -95,6 +95,7 @@ class Meeting(models.Model):
     title = models.CharField(max_length=200)
     datetime = models.DateTimeField()
     details = models.TextField()
+    meeting_link = models.URLField(blank=True, null=True)  # NEW FIELD
     employees = models.ManyToManyField(Employee, related_name='meetings')  # Many-to-many relation
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.TextField(blank=True, null=True)  # Optional field

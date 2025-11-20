@@ -75,4 +75,7 @@ path('employee/leaves/', views.employee_leave_list, name='employee_leave_list'),
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('verify-otp/', views.verify_otp, name='verify_otp'),
     path('reset-password/', views.reset_password, name='reset_password'),
+# emp_login
+    path('employee/login/', views.employee_login, name='employee_login'),
+
 ]

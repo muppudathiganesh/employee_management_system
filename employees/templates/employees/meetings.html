@@ -253,6 +253,9 @@
                     <th>Title</th>
                     <th>Date & Time</th>
                     <th>Details</th>
+                  {% if not is_admin %}
+                <th>Meeting Link</th>
+            {% endif %}
                     {% if is_admin %}<th>Employees</th>{% endif %}
                 </tr>
             </thead>
@@ -273,6 +276,17 @@
                                 {% endfor %}
                             </td>
                         {% endif %}
+                          {% if not is_admin %}
+            <td>
+                {% if meeting.meeting_link %}
+                    <a href="{{ meeting.meeting_link }}" target="_blank" class="btn btn-primary btn-sm">
+                        Join Meeting
+                    </a>
+                {% else %}
+                    <span class="text-muted">No Link</span>
+                {% endif %}
+            </td>
+            {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>

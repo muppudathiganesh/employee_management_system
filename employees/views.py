@@ -722,12 +722,14 @@ def schedule_meeting(request):
         title = request.POST.get('title')
         datetime_value = request.POST.get('datetime')
         details = request.POST.get('details')
+        meeting_link = request.POST.get('meeting_link')  # NEW
         employee_ids = request.POST.getlist('employees')
 
         meeting = Meeting.objects.create(
             title=title,
             datetime=datetime_value,
-            details=details
+            details=details,
+            meeting_link=meeting_link
         )
         meeting.employees.set(employee_ids)
 
@@ -746,6 +748,9 @@ A new meeting has been scheduled.
 📌 Title: {title}
 📅 Date & Time: {datetime_value}
 📝 Details: {details}
+🔗 Meeting Link: {meeting_link}
+
+Please join using the above link.
 
 Regards,
 Admin
@@ -1372,3 +1377,125 @@ def register(request):
         return redirect('login')
 
     return render(request, 'employees/register.html')
+# automatic attendance-------------------
+from django.utils import timezone
+from .models import EmployeeLoginLogout, Employee, Attendance
+
+def employee_login(request):
+    emp = request.user.employee
+    print("Employee login hit:", emp)
+
+    EmployeeLoginLogout.objects.create(
+        employee=emp,
+        login_time=timezone.now()
+    )
+
+    today = timezone.now().date()
+
+    Attendance.objects.get_or_create(
+        employee=emp,
+        date=today,
+        defaults={'status': 'Present'}
+    )
+
+    return redirect('dashboard')
+
+from .models import Employee, Leave, Attendance, Department
+from django.utils import timezone
+from datetime import date
+
+def dashboard(request):
+
+    today = date.today()
+    total_employees = Employee.objects.count()
+    
+    total_departments = Department.objects.count()
+
+    # If employee has LEAVE today
+    on_leave_today = Leave.objects.filter(
+        start_date__lte=today,
+        end_date__gte=today,
+        status='Approved'
+    ).count()
+
+    # Present = attendance record created from login
+    present_today = Attendance.objects.filter(date=today, status='Present').count()
+
+    # Absent = not present + not leave
+    absent_today = total_employees - (present_today + on_leave_today)
+
+    # For your pending approvals card
+    pending_approvals = Leave.objects.filter(status='Pending').count()
+
+    context = {
+        'total_employees': total_employees,
+        'total_departments': total_departments, 
+        'on_leave_today': on_leave_today,
+        'present_today': present_today,
+        'absent_today': absent_today,
+        'leave_today': on_leave_today,
+        'pending_approvals': pending_approvals,
+      
+    }
+
+    return render(request, "employees/home.html", context)
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST.get("username")
+#         password = request.POST.get("password")
+
+#         user = authenticate(request, username=username, password=password)
+
+#         if user:
+#             login(request, user)
+
+#             # 👉 Superuser → Admin Dashboard
+#             if user.is_superuser:
+#                 return redirect('dashboard')
+
+#             # 👉 All others (staff + normal users) → Employee Dashboard
+#             return redirect('employee_dashboard')
+
+#         messages.error(request, "Invalid username or password")
+
+#     return render(request, 'employees/login.html')
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.utils import timezone
+from .models import Attendance, Employee
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+
+            # 👉 Superuser → Admin Dashboard
+            if user.is_superuser:
+                return redirect('dashboard')
+
+            # 👉 Employee: AUTO Attendance Marking
+            if hasattr(user, 'employee'):
+                emp = user.employee
+                today = timezone.now().date()
+
+                # Auto-create attendance only once per day
+                Attendance.objects.get_or_create(
+                    employee=emp,
+                    date=today,
+                    defaults={"status": "Present"}
+                )
+
+                return redirect('employee_dashboard')
+
+            # Default fallback
+            return redirect('dashboard')
+
+        messages.error(request, "Invalid username or password")
+
+    return render(request, 'employees/login.html')
