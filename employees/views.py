@@ -1335,13 +1335,12 @@ def reset_password(request):
         else:
             messages.error(request, "Passwords do not match")
     return render(request, 'employees/reset_password.html')
-
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.contrib.auth import login
 from .models import Employee
-
 
 def register(request):
     if request.method == "POST":
@@ -1367,16 +1366,61 @@ def register(request):
             first_name=full_name
         )
 
-        # 🔥 Create employee profile (required)
+        # Create employee profile
         Employee.objects.create(
             user=user,
             date_joined=timezone.now()
         )
 
-        messages.success(request, "Registration successful! Please sign in.")
-        return redirect('login')
+        # Automatically log in the user
+        login(request, user)
+
+        messages.success(request, "Registration successful! Welcome to your dashboard.")
+        return redirect('employees/employee_dashboard')  # redirect to dashboard
 
     return render(request, 'employees/register.html')
+
+# from django.contrib.auth.models import User
+# from django.contrib import messages
+# from django.shortcuts import render, redirect
+# from django.utils import timezone
+# from .models import Employee
+
+
+# def register(request):
+#     if request.method == "POST":
+#         full_name = request.POST['full_name']
+#         email = request.POST['email']
+#         username = request.POST['username']
+#         password1 = request.POST['password1']
+#         password2 = request.POST['password2']
+
+#         if password1 != password2:
+#             messages.error(request, "Passwords do not match.")
+#             return redirect('register')
+
+#         if User.objects.filter(username=username).exists():
+#             messages.error(request, "Username already exists.")
+#             return redirect('register')
+
+#         # Create user
+#         user = User.objects.create_user(
+#             username=username,
+#             password=password1,
+#             email=email,
+#             first_name=full_name
+#         )
+
+#         # 🔥 Create employee profile (required)
+#         Employee.objects.create(
+#             user=user,
+#             date_joined=timezone.now()
+#         )
+
+#         messages.success(request, "Registration successful! Please sign in.")
+#         return redirect('login')
+
+#     return render(request, 'employees/register.html')
 # automatic attendance-------------------
 from django.utils import timezone
 from .models import EmployeeLoginLogout, Employee, Attendance

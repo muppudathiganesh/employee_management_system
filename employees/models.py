@@ -14,7 +14,7 @@ class Designation(models.Model):
     def __str__(self):
         return self.title
 
-
+from django.utils import timezone
 # 2. Employee Profile
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -23,9 +23,10 @@ class Employee(models.Model):
     last_name = models.CharField(max_length=100, blank=True)
     email = models.EmailField(unique=True) 
     phone = models.CharField(max_length=20)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    designation = models.ForeignKey(Designation, on_delete=models.CASCADE)
-    date_joined = models.DateField()
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
+    designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True, blank=True)
+    # date_joined = models.DateField()
+    date_joined = models.DateField(default=timezone.now) 
     address = models.TextField(blank=True)
 
     def __str__(self):
