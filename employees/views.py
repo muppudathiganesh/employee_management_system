@@ -1543,3 +1543,46 @@ def login_view(request):
         messages.error(request, "Invalid username or password")
 
     return render(request, 'employees/login.html')
+
+# search-------------------
+
+# from django.shortcuts import render, get_object_or_404, redirect
+# from employees.models import Employee, Department, Designation
+# from django.db.models import Q
+
+
+# def search_all(request):
+#     q = request.GET.get("q", "").strip()
+
+#     employees = departments = designations = []
+
+#     if q:
+#         employees = Employee.objects.filter(
+#             Q(first_name__icontains=q) |
+#             Q(last_name__icontains=q) |
+#             Q(emp_id__icontains=q) |
+#             Q(email__icontains=q) |
+#             Q(phone__icontains=q) |
+#             Q(user__username__icontains=q) |
+#             Q(department__name__icontains=q) |
+#             Q(designation__title__icontains=q)
+#         )
+
+#         departments = Department.objects.filter(name__icontains=q)
+#         designations = Designation.objects.filter(title__icontains=q)
+
+#     return render(request, "employees/search_results.html", {
+#         "q": q,
+#         "employees": employees,
+#         "departments": departments,
+#         "designations": designations,
+#     })
+
+
+# def employee_detail(request, id):
+#     employee = Employee.objects.get(id=id)
+#     return render(request, "employees/employee_detail.html", {"employee": employee})
+
+
+# def employee_redirect(request):
+#     return redirect("employee_detail", id=request.user.employee.id)

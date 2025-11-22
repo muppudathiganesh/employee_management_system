@@ -1,0 +1,51 @@
+ {% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h4>Search Results for: <strong>{{ q }}</strong></h4>
+
+     <!-- <!- Employees -->  
+    {% if employees %}
+    <h5 class="mt-4 text-primary">Employees</h5>
+    <ul class="list-group mb-3">
+        {% for emp in employees %}
+        <li class="list-group-item d-flex justify-content-between">
+            {{ emp.full_name }} ({{ emp.user.username }})
+            <a href="{% url 'employee_detail' %}" class="btn btn-sm btn-primary">View</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %} 
+
+    <!-- <!- Departments --> 
+     {% if departments %}
+    <h5 class="mt-4 text-success">Departments</h5>
+    <ul class="list-group mb-3">
+        {% for dep in departments %}
+        <li class="list-group-item d-flex justify-content-between">
+            {{ dep.name }}
+            <a href="{% url 'view_department_detail' dep.id %}" class="btn btn-sm btn-success">Open</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %} 
+
+   
+     {% if designations %}
+    <h5 class="mt-4 text-warning">Designations</h5>
+    <ul class="list-group mb-5">
+        {% for des in designations %}
+        <li class="list-group-item">
+            {{ des.title }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if not employees and not departments and not designations %}
+    <div class="alert alert-danger mt-3">No results found.</div>
+    {% endif %}
+
+</div>
+{% endblock %} 

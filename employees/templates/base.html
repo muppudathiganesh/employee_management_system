@@ -56,6 +56,11 @@
           <input type="text" name="q" value="{{ q }}" placeholder="Search..." class="form-control me-2" />
           <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
         </form>
+
+
+
+
+
         <a href="{% url 'logout' %}" class="btn btn-danger w-100 w-lg-auto">
           <i class="bi bi-box-arrow-right"></i> Logout
         </a>
@@ -82,6 +87,8 @@
      <a href="{% url 'meetings_view' %}"> Meetings</a>
       <a href="{% url 'admin_chat_list' %}"> Chat</a>
       <a href="{% url 'employee_detail' %}"> Employee Details</a>
+      
+
        <a class="nav-link" href="{% url 'login_logout_report' %}">
      Employee Login/Logout Report
   </a>

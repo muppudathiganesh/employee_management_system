@@ -42,6 +42,8 @@ path('leave/all/', views.leave_list, name='leave_list'),
 path('employee/detail/', views.employee_detail, name='employee_detail'),
 
 
+
+
 path('logout/', views.logout_view, name='logout'),
 path('register/', views.register, name='register'),
 path('employee/dashboard/', views.employee_dashboard, name='employee_dashboard'),
@@ -77,5 +79,11 @@ path('employee/leaves/', views.employee_leave_list, name='employee_leave_list'),
     path('reset-password/', views.reset_password, name='reset_password'),
 # emp_login
     path('employee/login/', views.employee_login, name='employee_login'),
+
+# # path("search/", views.search_all, name="search_all"),
+#  path("search/", views.search_all, name="search_all"),
+# # 
+# #    # no ID
+# path("employee/detail/<int:id>/", views.employee_detail, name="employee_detail"),
 
 ]
