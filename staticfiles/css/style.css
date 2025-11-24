@@ -14,7 +14,7 @@
   80% { transform: rotate(-8deg); }
   100% { transform: rotate(0deg); }
 }
-/* DROPDOWN MAIN LINK */
+/* DROPDOWN MAIN LINK
 .sidebar .dropdown-link {
     display: block;
     color: white;
@@ -24,17 +24,17 @@
 }
 
 .sidebar .dropdown-link:hover {
-    background-color: rgba(255, 255, 255, 0.15); /* same as your sidebar hover */
+    background-color: rgba(255, 255, 255, 0.15); 
 }
 
-/* SUBMENU BACKGROUND MATCHES SIDEBAR */
+
 .sidebar .submenu {
     display: none;
-    background-color: rgba(255, 255, 255, 0.1); /* SAME SHADE AS SIDEBAR */
+    background-color: rgba(255, 255, 255, 0.1); 
     padding-left: 15px;
 }
 
-/* SUBMENU LINKS */
+
 .sidebar .submenu a {
     display: block;
     color: white;
@@ -49,7 +49,7 @@
     display: block !important;
 }
 .submenu {
-  background: #1e2329;   /* same as sidebar */
+  background: #1e2329;  
   padding-left: 15px;
 }
 
@@ -68,7 +68,7 @@
   transition: transform 0.3s;
 }
 
-
+ */
 
  .navbar li  {
      color:black;
