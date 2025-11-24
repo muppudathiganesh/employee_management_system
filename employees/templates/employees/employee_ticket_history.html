@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>My Ticket History</h3>
+
+<table class="table table-striped">
+    <tr>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Reply</th>
+        <th>Date</th>
+    </tr>
+
+    {% for t in tickets %}
+    <tr>
+        <td>{{ t.subject }}</td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.reply|default:"-- No reply yet --" }}</td>
+        <td>{{ t.created_at|date:"d-M-Y H:i" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -47,3 +47,25 @@ class RegisterForm(forms.ModelForm):
         if p1 != p2:
             raise forms.ValidationError("Passwords do not match")
         return cleaned_data
+from django import forms
+from .models import DailyReport
+
+class DailyReportForm(forms.ModelForm):
+    class Meta:
+        model = DailyReport
+        fields = ["task_summary"]
+        widgets = {
+            "task_summary": forms.Textarea(attrs={"class": "form-control", "rows": 5})
+        }
+
+from django import forms
+from .models import Ticket
+
+class TicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ["subject", "message"]
+        widgets = {
+            "subject": forms.TextInput(attrs={"class": "form-control"}),
+            "message": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+        }

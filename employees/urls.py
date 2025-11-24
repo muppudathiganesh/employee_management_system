@@ -85,5 +85,20 @@ path('employee/leaves/', views.employee_leave_list, name='employee_leave_list'),
 # # 
 # #    # no ID
 # path("employee/detail/<int:id>/", views.employee_detail, name="employee_detail"),
+# report daily------------
+
+path("report/submit/", views.submit_daily_report, name="submit_daily_report"),
+path("reports/daily/", views.admin_daily_reports, name="admin_daily_reports"),
+path("report/edit/<int:report_id>/", views.edit_daily_report, name="edit_daily_report"),
+path("report/delete/<int:report_id>/", views.delete_daily_report, name="delete_daily_report"),
+path("admin/report/reply/<int:report_id>/", views.admin_reply_report, name="admin_reply_report"),
+path("report/history/", views.employee_report_history, name="employee_report_history"),
+
+
+# Ticket system
+path("ticket/raise/", views.raise_ticket, name="raise_ticket"),
+path("tickets/admin/", views.admin_view_tickets, name="admin_view_tickets"),
+path("ticket/reply/<int:ticket_id>/", views.admin_reply_ticket, name="admin_reply_ticket"),
+path("tickets/history/", views.employee_ticket_history, name="employee_ticket_history"),
 
 ]

@@ -146,3 +146,35 @@ class PasswordResetOTP(models.Model):
     def generate_otp():
         return str(random.randint(100000, 999999))
 
+from django.db import models
+from django.contrib.auth.models import User
+
+class DailyReport(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    task_summary = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    admin_comment = models.TextField(blank=True, null=True)  
+    def __str__(self):
+        return f"{self.employee.user.username} - {self.date}"
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Ticket(models.Model):
+    STATUS_CHOICES = [
+        ("open", "Open"),
+        ("in_progress", "In Progress"),
+        ("resolved", "Resolved"),
+        ("closed", "Closed"),
+    ]
+
+    employee = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    reply = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="open")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subject

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .ticket-container {
+        max-width: 500px;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin: 50px auto;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .ticket-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #003366;
+        margin-bottom: 20px;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-submit {
+        width: 100%;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: navy;
+        color: white;
+    }
+
+    .btn-submit:hover {
+        background-color: #001f54;
+    }
+</style>
+
+<div class="ticket-container">
+    <h2 class="ticket-title">Raise a Ticket</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label fw-bold">Subject</label>
+            {{ form.subject }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Describe Your Issue</label>
+            {{ form.message }}
+        </div>
+
+        <button class="btn btn-submit">Submit Ticket</button>
+    </form>
+</div>
+
+{% endblock %}

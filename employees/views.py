@@ -1585,4 +1585,127 @@ def login_view(request):
 
 
 # def employee_redirect(request):
+
 #     return redirect("employee_detail", id=request.user.employee.id)
+
+# daily report---------------------------
+
+
+from .models import DailyReport
+from .forms import DailyReportForm
+from django.contrib import messages
+
+def submit_daily_report(request):
+    employee = request.user.employee
+
+    if request.method == "POST":
+        form = DailyReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.employee = employee
+            report.save()
+            messages.success(request, "Daily Report Submitted Successfully!")
+            return redirect("employee_dashboard")
+    else:
+        form = DailyReportForm()
+
+    return render(request, "employees/submit_daily_report.html", {"form": form})
+def admin_daily_reports(request):
+    reports = DailyReport.objects.select_related("employee").order_by("-created_at")
+    return render(request, "employees/admin_daily_reports.html", {"reports": reports})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import DailyReport
+from .forms import DailyReportForm
+from django.contrib import messages
+
+# --- EDIT REPORT ---
+def edit_daily_report(request, report_id):
+    report = get_object_or_404(DailyReport, id=report_id, employee=request.user.employee)
+
+    if request.method == "POST":
+        form = DailyReportForm(request.POST, instance=report)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Report updated successfully!")
+            return redirect("employee_report_history")
+    else:
+        form = DailyReportForm(instance=report)
+
+    return render(request, "employees/edit_daily_report.html", {"form": form})
+
+
+# --- DELETE REPORT ---
+def delete_daily_report(request, report_id):
+    report = get_object_or_404(DailyReport, id=report_id, employee=request.user.employee)
+
+    if request.method == "POST":
+        report.delete()
+        messages.success(request, "Report deleted successfully!")
+        return redirect("employee_report_history")
+
+    return render(request, "employees/delete_daily_report_confirm.html", {"report": report})
+
+
+def admin_reply_report(request, report_id):
+    report = DailyReport.objects.get(id=report_id)
+
+    if request.method == "POST":
+        report.admin_comment = request.POST.get("admin_comment")
+        report.save()
+        messages.success(request, "Reply sent successfully!")
+        return redirect("admin_daily_reports")
+
+    return render(request, "employees/admin_reply_report.html", {"report": report})
+def employee_report_history(request):
+    employee = request.user.employee
+    reports = DailyReport.objects.filter(employee=employee).order_by("-date")
+    return render(request, "employees/employee_report_history.html", {"reports": reports})
+
+
+# ticket raise-------------------
+from .models import Ticket
+from .forms import TicketForm
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+
+# EMPLOYEE — Raise a Ticket
+def raise_ticket(request):
+    if request.method == "POST":
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            ticket.employee = request.user
+            ticket.save()
+            messages.success(request, "Your ticket has been submitted!")
+            return redirect("employee_dashboard")
+    else:
+        form = TicketForm()
+
+    return render(request, "employees/raise_ticket.html", {"form": form})
+
+
+# ADMIN — View all tickets
+def admin_view_tickets(request):
+    tickets = Ticket.objects.select_related("employee").order_by("-created_at")
+    return render(request, "employees/admin_view_tickets.html", {"tickets": tickets})
+
+
+# ADMIN — Reply to ticket
+def admin_reply_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if request.method == "POST":
+        ticket.reply = request.POST.get("reply")
+        ticket.status = request.POST.get("status")
+        ticket.save()
+        messages.success(request, "Reply sent!")
+        return redirect("admin_view_tickets")
+
+    return render(request, "employees/admin_reply_ticket.html", {"ticket": ticket})
+
+
+# EMPLOYEE — Ticket History
+def employee_ticket_history(request):
+    tickets = Ticket.objects.filter(employee=request.user).order_by("-created_at")
+    return render(request, "employees/employee_ticket_history.html", {"tickets": tickets})

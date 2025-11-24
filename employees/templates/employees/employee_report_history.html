@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>My Daily Reports</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Task Summary</th>
+            <th>Admin Comment</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for report in reports %}
+        <tr>
+            <td>{{ report.date }}</td>
+            <td>{{ report.task_summary }}</td>
+            <td>
+                {% if report.admin_comment %}
+                    <span class="text-success">{{ report.admin_comment }}</span>
+                {% else %}
+                    <span class="text-muted">No comment yet</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'edit_daily_report' report.id %}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{% url 'delete_daily_report' report.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

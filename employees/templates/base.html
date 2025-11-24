@@ -83,11 +83,13 @@
       <a href="{% url 'payroll_list' %}"> Payroll</a>
       <a href="{% url 'leave_list' %}"> Leave</a>
       <a href="{% url 'wfh_list' %}"> Work From Home</a>
+<a href="{% url 'admin_view_tickets' %}">Tickets</a>
 
      <a href="{% url 'meetings_view' %}"> Meetings</a>
       <a href="{% url 'admin_chat_list' %}"> Chat</a>
       <a href="{% url 'employee_detail' %}"> Employee Details</a>
-      
+      <a href="{% url 'admin_daily_reports' %}">Daily Reports</a>
+
 
        <a class="nav-link" href="{% url 'login_logout_report' %}">
      Employee Login/Logout Report
@@ -97,11 +99,15 @@
       
       <a href="{% url 'my_profile' %}"> Profile</a>
 
-
+<a href="{% url 'submit_daily_report' %}">Daily Task Report</a>
+<a href="{% url 'employee_report_history' %}">My Report History</a>
       <a href="{% url 'employee_attendance' %}">  Attendance</a>
       <!-- <a href="{% url 'payroll_list' %}">💰 Payroll</a> -->
       <a href="{% url 'employee_leave_list' %}"> Leave </a>
       <a href="{% url 'wfh_list' %}"> Work From Home</a>
+      <a href="{% url 'raise_ticket' %}">Raise a Ticket</a>
+<a href="{% url 'employee_ticket_history' %}">My Tickets</a>
+
       <a href="{% url 'meetings_view' %}">  Meetings</a>
    {% if admin_id %}
   <a href="{% url 'chat_with_employee' admin_id %}"> Chat with Admin</a>

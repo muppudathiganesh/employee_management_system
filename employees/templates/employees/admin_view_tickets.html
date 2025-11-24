@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>All Tickets</h3>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Employee</th>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for t in tickets %}
+    <tr>
+        <td>{{ t.employee.username }}</td>
+        <td>{{ t.subject }}</td>
+        <td>{{ t.status }}</td>
+        <td>
+            <a href="{% url 'admin_reply_ticket' t.id %}" class="btn btn-warning btn-sm">
+                Reply
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

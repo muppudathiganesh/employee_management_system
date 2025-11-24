@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 shadow">
+    <h3>Reply to Report</h3>
+
+    <p><strong>Date:</strong> {{ report.date }}</p>
+    <p><strong>Task:</strong> {{ report.task_summary }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="admin_comment" class="form-control" rows="4">{{ report.admin_comment }}</textarea>
+        <br>
+        <button class="btn btn-success">Send Reply</button>
+    </form>
+</div>
+{% endblock %}
