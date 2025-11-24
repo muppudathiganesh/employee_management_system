@@ -4,7 +4,7 @@
       background-color: #f8f9fa;
       overflow-x: hidden;
     }
-.bell-shake {
+/* .bell-shake {
   animation: shake 0.3s ease-in-out infinite alternate;
 }
 
@@ -13,7 +13,9 @@
   40% { transform: rotate(8deg); }
   80% { transform: rotate(-8deg); }
   100% { transform: rotate(0deg); }
-}
+} */
+
+
 
  .navbar li  {
      color:black;
@@ -30,7 +32,7 @@
       top: 0;
       left: 0;
     
-       background-color: #2ECC71; 
+      background-color: #2ECC71; 
       color: white;
       padding-top: 20px;
       transition: left 0.3s ease;
@@ -38,6 +40,8 @@
       margin-top: 80px;
          
     }
+
+
 
 
     .sidebar h4 {
@@ -57,15 +61,14 @@
     }
 
     .sidebar a:hover, .sidebar a.active {
-      /* background-color: gray; */
-        background-color: #0A1A5B; /* Navy Blue */
+    
+        background-color: #0A1A5B; 
       border-left: 4px solid white;
     }
-
-    @media (max-width: 768px) {
+     @media (max-width: 768px) {
       .sidebar { left: -250px; }
       .sidebar.active { left: 0; }
-    }
+    } 
 
     /* Toggle Button */
     .toggle-btn {
@@ -87,7 +90,7 @@
       margin-left: 250px;
       padding: 20px;
       /* background: url("{% static 'images/SUNBASE+-+Blog+May+Week+3-640w.webp' %}") no-repeat center center fixed; */
-      background-size: cover;
+      /* background-size: cover; */
       min-height: 100vh;
       position: relative;
       transition: margin-left 0.3s;
@@ -250,14 +253,7 @@ html, body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }
-/* .card {
-    background-color: #2ECC71 !important;
-    color: white;
-} */
-/* .card {
-    background-color: #0A1A5B !important;
-    color: white;
-} */
+
 .card {
     background: linear-gradient(45deg, #2ECC71, #0A1A5B) !important;
     color: white;

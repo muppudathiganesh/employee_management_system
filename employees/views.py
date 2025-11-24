@@ -1724,9 +1724,9 @@ def employee_ticket_history(request):
     return render(request, "employees/employee_ticket_history.html", {"tickets": tickets})
 from .models import Ticket
 
-def dashboard(request):
-    unread_count = Ticket.objects.filter(is_read=False).count()
-    return render(request, "employees/home.html", {"unread_count": unread_count})
+# def dashboard(request):
+#     unread_count = Ticket.objects.filter(is_read=False).count()
+#     return render(request, "employees/home.html", {"unread_count": unread_count})
 def ticket_detail(request, ticket_id):
     ticket = Ticket.objects.get(id=ticket_id)
     ticket.is_read = True
