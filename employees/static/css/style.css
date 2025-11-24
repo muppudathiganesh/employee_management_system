@@ -4,6 +4,71 @@
       background-color: #f8f9fa;
       overflow-x: hidden;
     }
+.bell-shake {
+  animation: shake 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  40% { transform: rotate(8deg); }
+  80% { transform: rotate(-8deg); }
+  100% { transform: rotate(0deg); }
+}
+/* DROPDOWN MAIN LINK */
+.sidebar .dropdown-link {
+    display: block;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sidebar .dropdown-link:hover {
+    background-color: rgba(255, 255, 255, 0.15); /* same as your sidebar hover */
+}
+
+/* SUBMENU BACKGROUND MATCHES SIDEBAR */
+.sidebar .submenu {
+    display: none;
+    background-color: rgba(255, 255, 255, 0.1); /* SAME SHADE AS SIDEBAR */
+    padding-left: 15px;
+}
+
+/* SUBMENU LINKS */
+.sidebar .submenu a {
+    display: block;
+    color: white;
+    padding: 10px 32px;
+    text-decoration: none;
+}
+
+.sidebar .submenu a:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+.show-submenu {
+    display: block !important;
+}
+.submenu {
+  background: #1e2329;   /* same as sidebar */
+  padding-left: 15px;
+}
+
+.submenu a {
+  display: block;
+  padding: 6px 0;
+  color: #fff;
+}
+
+.dropdown-link {
+  color: #fff;
+  cursor: pointer;
+}
+
+.caret-icon {
+  transition: transform 0.3s;
+}
+
+
 
  .navbar li  {
      color:black;
@@ -15,22 +80,27 @@
     }
     .sidebar {
       width: 250px;
-      height: 100vh;
+      /* height: 100vh; */
+       height: calc(100vh - 80px);
       position: fixed;
-      top: 0;
+      /* top: 0; */
+        top: 80px;  
       left: 0;
-      /* background-color:rgb(53, 148, 53); */
+    
        background-color: #2ECC71; /* Vetri Green */
       color: white;
-      padding-top: 30px;
+      padding-top: 20px;
       transition: left 0.3s ease;
       z-index: 1000;
-      margin-top: 80px; /* below navbar */
+      margin-top: 80px;
+       overflow-y: auto;           /* SCROLL WORKS */
+       /* overflow-x: hidden; */
     }
+
 
     .sidebar h4 {
       text-align: center;
-      font-size: 18px;
+      font-size: 12px;
       margin-bottom: 30px;
       text-transform: uppercase;
     }

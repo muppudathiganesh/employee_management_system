@@ -15,7 +15,9 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   
   {% block extra_css %}{% endblock %}
+  
 </head>
+
 <body>
 
 <!-- ================= NAVBAR =================
@@ -72,18 +74,44 @@
  
 
   
-  <div class="sidebar" id="sidebar">
+  <div class="sidebar " id="sidebar">
      <button class="close-btn" onclick="toggleSidebar()">&times;</button>
    <h4 style="color: navy; font-size: large;">VETRI</h4>
     {% if request.user.is_superuser %}
       <a href="{% url 'dashboard' %}">Dashboard</a>
       <a href="{% url 'employee_list' %}">All Employees</a>
       <a href="{% url 'view_departments' %}"> Departments</a>
-      <a href="{% url 'attendance_list' %}"> Attendance</a>
-      <a href="{% url 'payroll_list' %}"> Payroll</a>
+       <a href="{% url 'payroll_list' %}"> Payroll</a>
+      <!-- <a href="{% url 'attendance_list' %}"> Attendance</a>
+     
       <a href="{% url 'leave_list' %}"> Leave</a>
-      <a href="{% url 'wfh_list' %}"> Work From Home</a>
-<a href="{% url 'admin_view_tickets' %}">Tickets</a>
+      <a href="{% url 'wfh_list' %}"> Work From Home</a> -->
+  <a href="#" class="dropdown-link d-flex justify-content-between align-items-center">
+  Attendance
+  <i class="bi bi-caret-down-fill caret-icon"></i>
+</a>
+
+<div class="submenu" style="display: none;">
+  <a href="{% url 'attendance_list' %}">Attendance list</a>
+  <a href="{% url 'leave_list' %}">Leave</a>
+  <a href="{% url 'wfh_list' %}">Work From Home</a>
+</div>
+
+
+
+<!-- <a href="{% url 'admin_view_tickets' %}">Tickets</a> -->
+ <a href="{% url 'admin_view_tickets' %}" class="nav-link position-relative">
+
+      Tickets
+
+      {% if unread_count > 0 %}
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{ unread_count }}
+      </span>
+      {% endif %}
+
+  </a>
+
 
      <a href="{% url 'meetings_view' %}"> Meetings</a>
       <a href="{% url 'admin_chat_list' %}"> Chat</a>
@@ -94,6 +122,7 @@
        <a class="nav-link" href="{% url 'login_logout_report' %}">
      Employee Login/Logout Report
   </a>
+
     {% else %}
       <a href="{% url 'employee_dashboard' %}">Dashboard</a>
       
@@ -164,6 +193,31 @@ function toggleSidebar() {
   sidebar.classList.toggle('active');
   overlay.classList.toggle('active');
 }
+</script>
+<script>
+
+document.querySelectorAll(".dropdown-link").forEach(function(link) {
+  
+  link.addEventListener("click", function(e) {
+    e.preventDefault();
+
+    let submenu = this.nextElementSibling;
+    let caret = this.querySelector(".caret-icon");
+
+    // Toggle show/hide
+    if (submenu.style.display === "none" || submenu.style.display === "") {
+      submenu.style.display = "block";
+      caret.style.transform = "rotate(180deg)"; // caret up
+    } else {
+      submenu.style.display = "none";
+      caret.style.transform = "rotate(0deg)";   // caret down
+    }
+  });
+
+});
+
+
+
 </script>
 
 

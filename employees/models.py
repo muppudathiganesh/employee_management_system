@@ -175,6 +175,6 @@ class Ticket(models.Model):
     reply = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="open")
     created_at = models.DateTimeField(auto_now_add=True)
-
+    is_read = models.BooleanField(default=False)  # <--- IMPORTANT
     def __str__(self):
         return self.subject

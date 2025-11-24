@@ -71,6 +71,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'employees.context_processors.admin_id_processor',
+                   
+                # ⭐ Add this line
+                "employees.context_processors.unread_ticket_count",
             ],
         },
     },

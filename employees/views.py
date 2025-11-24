@@ -1692,13 +1692,26 @@ def admin_view_tickets(request):
 
 
 # ADMIN — Reply to ticket
+# def admin_reply_ticket(request, ticket_id):
+#     ticket = get_object_or_404(Ticket, id=ticket_id)
+
+#     if request.method == "POST":
+#         ticket.reply = request.POST.get("reply")
+#         ticket.status = request.POST.get("status")
+#         ticket.save()
+#         messages.success(request, "Reply sent!")
+#         return redirect("admin_view_tickets")
+
+#     return render(request, "employees/admin_reply_ticket.html", {"ticket": ticket})
 def admin_reply_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
     if request.method == "POST":
         ticket.reply = request.POST.get("reply")
         ticket.status = request.POST.get("status")
+        ticket.is_read = True   # 🔥 Mark ticket as read when admin replies
         ticket.save()
+
         messages.success(request, "Reply sent!")
         return redirect("admin_view_tickets")
 
@@ -1709,3 +1722,13 @@ def admin_reply_ticket(request, ticket_id):
 def employee_ticket_history(request):
     tickets = Ticket.objects.filter(employee=request.user).order_by("-created_at")
     return render(request, "employees/employee_ticket_history.html", {"tickets": tickets})
+from .models import Ticket
+
+def dashboard(request):
+    unread_count = Ticket.objects.filter(is_read=False).count()
+    return render(request, "employees/home.html", {"unread_count": unread_count})
+def ticket_detail(request, ticket_id):
+    ticket = Ticket.objects.get(id=ticket_id)
+    ticket.is_read = True
+    ticket.save()
+    return render(request, "employees/ticket_detail.html", {"ticket": ticket})
