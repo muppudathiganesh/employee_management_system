@@ -1732,3 +1732,86 @@ def ticket_detail(request, ticket_id):
     ticket.is_read = True
     ticket.save()
     return render(request, "employees/ticket_detail.html", {"ticket": ticket})
+
+
+# punchin/out
+
+# employees/views.py
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from .models import EmployeeLog
+from django.contrib.auth.models import User
+
+@login_required
+def punch_in(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        today = timezone.now().date()
+        log, created = EmployeeLog.objects.get_or_create(employee=request.user, date=today)
+        if not log.punch_in:
+            log.punch_in = timezone.now()
+            log.save()
+            return JsonResponse({'status': 'success', 'message': f'Punched in at {log.punch_in.strftime("%H:%M:%S")}', 'punch_in': log.punch_in.strftime("%H:%M:%S")})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Already punched in', 'punch_in': log.punch_in.strftime("%H:%M:%S")})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+@login_required
+def punch_out(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        today = timezone.now().date()
+        try:
+            log = EmployeeLog.objects.get(employee=request.user, date=today)
+            if not log.punch_out:
+                log.punch_out = timezone.now()
+                log.save()
+                return JsonResponse({'status': 'success', 'message': f'Punched out at {log.punch_out.strftime("%H:%M:%S")}', 'punch_out': log.punch_out.strftime("%H:%M:%S")})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Already punched out', 'punch_out': log.punch_out.strftime("%H:%M:%S")})
+        except EmployeeLog.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Punch in first!'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+
+
+from django.utils import timezone
+from .models import EmployeeLog
+
+@login_required
+def employee_dashboard(request):
+    today = timezone.now().date()
+
+    today_log = EmployeeLog.objects.filter(
+        employee=request.user,
+        date=today
+    ).first()
+
+    return render(request, "employees/employee_dashboard.html", {
+        "today_log": today_log
+    })
+
+@login_required
+def admin_dashboard(request):
+    if not request.user.is_superuser:
+        return redirect('employee_dashboard')
+
+    today = timezone.now().date()
+    logs = EmployeeLog.objects.filter(date=today).select_related('employee')
+
+    context = {
+        'logs': logs
+    }
+    return render(request, 'employees/home.html', context)
+from django.utils import timezone
+from .models import EmployeeLog
+
+@login_required
+def punch_in_out_admin(request):
+    today = timezone.now().date()
+    logs = EmployeeLog.objects.filter(date=today).select_related("employee")
+
+    return render(request, "employees/punch_in_out_admin.html", {
+        "logs": logs,
+        "today": today
+    })

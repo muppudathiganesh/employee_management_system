@@ -86,12 +86,17 @@
      
       <a href="{% url 'leave_list' %}"> Leave</a>
       <a href="{% url 'wfh_list' %}"> Work From Home</a> -->
+     
   <a href="#" class="dropdown-link d-flex justify-content-between align-items-center">
   Attendance
   <i class="bi bi-caret-down-fill caret-icon"></i>
 </a>
 
 <div class="submenu" style="display: none;">
+    <a class="nav-link" href="{% url 'punch_in_out_admin' %}">
+        <i class="bi bi-clock-history me-2"></i>
+        Punch In / Out Records
+    </a>
   <a href="{% url 'attendance_list' %}">Attendance list</a>
   <a href="{% url 'leave_list' %}">Leave</a>
   <a href="{% url 'wfh_list' %}">Work From Home</a>
@@ -138,6 +143,7 @@
 </a>
 
 <div class="submenu" style="display: none;">
+  
   <a href="{% url 'admin_daily_reports' %}">Daily Reports</a>
   <a href="{% url 'login_logout_report' %}">Employee Login/Logout Report</a>
 </div>

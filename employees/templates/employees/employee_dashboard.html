@@ -13,387 +13,9 @@
  
 
     
-  <!-- <style>
-    .fc-daygrid-event .fc-event-title {
-    white-space: pre-line !important;
-    line-height: 1.2;
-}
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8f9fa;
-      overflow-x: hidden;
-    }
-.navbar li  {
-     color:black;
-     font-size: x-large;
- }
-    .navbar {
-      z-index: 1050;
-      
-    }
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      /* background-color: rgb(53, 148, 53); */
-       background-color: #2ECC71; 
-      color: white;
-      padding-top: 30px;
-      transition: left 0.3s ease;
-      z-index: 1000;
-       margin-top: 80px; /* below navbar */
-    }
-
-    .sidebar h4 {
-      text-align: center;
-      font-size: 24px;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-    }
-
-    .sidebar a {
-      display: block;
-      color: white;
-      padding: 12px 20px;
-      text-decoration: none;
-      font-size: 24px;
-      transition: 0.3s;
-    }
-
-    .sidebar a:hover, .sidebar a.active {
-      /* background-color: gray; */
-        background-color: #0A1A5B; /* Navy Blue */
-      border-left: 4px solid white;
-    }
-
-    /* Mobile sidebar hidden initially */
-    @media (max-width: 768px) {
-      .sidebar {
-        left: -250px;
-      }
-      .sidebar.active {
-        left: 0;
-      }
-    }
-
-    /* Toggle button */
-    .toggle-btn {
-      display: none;
-      background: #0d6efd;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 5px;
-      font-size: 18px;
-    }
-
-    @media (max-width: 768px) {
-      .toggle-btn {
-        display: inline-block;
-      }
-    }
-
-    /* Content area */
-    .content {
-      margin-left: 250px;
-      padding: 20px;
-      /* background: url("{% static 'images/hrhuman-resources-technologyonline-modern-technologies-260nw-2470023379.jpg' %}") no-repeat center center fixed; 
-      */
-      background-color: #fff;
-      background-size: cover;
-      min-height: 100vh;
-      position: relative;
-      transition: margin-left 0.3s;
-        margin-top: 90px; /* offset for navbar */
-    }
-
-    @media (max-width: 768px) {
-      .content {
-        margin-left: 0;
-      }
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
-    }
-
-    /* Dashboard Cards */
-    .dashboard-cards .card {
-      border: none;
-      border-radius: 12px;
-      color: white;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      text-align: center;
-      min-height: 220px;
-      transition: transform 0.2s;
-    }
-
-    .dashboard-cards .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .bg-orange, .bg-blue, .bg-green, .bg-teal {
-      background-color: gray;
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-cards .card {
-        height: auto;
-        padding: 20px;
-      }
-    }
-
-    @media (max-width: 576px) {
-      h3, h2 {
-        font-size: 1.2rem;
-      }
-      .btn {
-        font-size: 0.9rem;
-        width: 120px !important;
-      }
-    }
-   .sidebar-close-btn {
-  width: 26px;
-  height: 26px;
-  font-size: 16px;
-  line-height: 1;
-   /* border-radius: 50%;  */
-  text-align: center;
-  padding: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-}
-
-.sidebar-close-btn:hover {
-  background-color: #dc3545;
-  color: white;
-} 
-
-.bg-orange { background-color: #fd7e14; }
-.bg-blue { background-color: #0d6efd; }
-.bg-green { background-color: #198754; }
-.bg-teal { background-color: #20c997; }
-
-.card i {
-  display: block;
-}
- #attendanceCalendar {
-    width: 100%;
-    max-width: 100%;
-    min-height: 250px; /* desktop min-height */
-    background-color: white;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    box-sizing: border-box;
-}
-
-@media (max-width: 768px) {
-    #attendanceCalendar {
-        min-height: 200px; /* mobile height */
-        padding: 5px;
-    }
-}
-footer {
-      margin-top: 40px;
-      background-color: #fff;
-      border-top: 1px solid #ddd;
-    }
-.about-section {
-  background-color: #fff;
-  border-radius: 20px;
-  padding: 50px 25px;
-  transition: transform 0.3s ease;
-}
-
-.about-section:hover {
-  transform: scale(1.01);
-}
-
-.about-section .border {
-  transition: all 0.3s ease;
-}
-
-.about-section .border:hover {
-  background-color: #f8f9fa;
-  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.1);
-}
-#contact img {
-  transition: transform 0.6s ease;
-}
-
-#contact img:hover {
-  transform: scale(1.05);
-}
-
-html {
-  scroll-behavior: smooth;
-}
-/* Sidebar Close Button */
-.close-btn {
-  display: none;
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 28px;
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  z-index: 1101;
-}
-
-@media (max-width: 768px) {
-  .close-btn {
-    display: block;
-  }
-}
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 999;
-}
-.sidebar.active + .sidebar-overlay {
-  display: block;
-}
-@media (max-width: 768px) {
-  .navbar-nav .nav-link {
-    font-size: 1.1rem;
-    padding: 8px 0;
-  }
-  .navbar-collapse {
-    background: white;
-    padding: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  }
-  .navbar {
-    padding: 10px 15px;
-  }
-}
-html, body {
-  overflow-x: hidden !important;
-}
-
-.navbar {
-  padding: 8px 10px;
-}
-
-@media (max-width: 768px) {
-  .navbar-toggler {
-    margin-right: 10px; /* keeps toggle visible */
-  }
-
-  .navbar-collapse {
-    background: #fff;
-    text-align: center;
-    border-radius: 8px;
-    padding: 10px 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-}
-.card {
-    background: linear-gradient(45deg, #2ECC71, #0A1A5B) !important;
-    color: white;
-}
-  </style>
-</head>
-<body> -->
-
-  <!-- 🌿 Navbar -->
-<!-- <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top border-bottom w-100">
-  <div class="container-fluid px-2">
-    
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{% static 'images/Screenshot 2025-11-19 103138.png' %}" width="150" height="60" class="rounded-circle me-2">
-      
-    </a>
-
-
-    <button class="navbar-toggler ms-auto border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-   
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto text-center mt-3 mt-lg-0">
-        <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Contacts</a></li>
-      </ul>
-
-     
-      <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mb-3 mb-lg-0">
-        <form method="get" class="d-flex w-100 w-lg-auto" style="max-width: 300px;">
-          <input type="text" name="q" value="{{ q }}" placeholder="Search..." class="form-control me-2" />
-          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
-        </form>
-        <a href="{% url 'logout' %}" class="btn btn-danger w-100 w-lg-auto">
-          <i class="bi bi-box-arrow-right"></i> Logout
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
-
-
+  
 
  
-  <div class="sidebar" id="sidebar">
-     <button class="close-btn" onclick="toggleSidebar()">&times;</button>
-    <h4>VETRI</h4>
-    {% if request.user.is_superuser %}
-      <a href="{% url 'dashboard' %}" class="active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-      <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i>All Employees</a>
-      <a href="{% url 'view_departments' %}">🏢 Departments</a>
-      <a href="{% url 'attendance_list' %}">📅 Attendance</a>
-      <a href="{% url 'payroll_list' %}">💰 Payroll</a>
-      <a href="{% url 'leave_list' %}">📅 Leave</a>
-      <a href="{% url 'wfh_list' %}">🏠 Work From Home</a>
-      <a href="{% url 'meetings_view' %}">🗓️ Meetings</a>
-      <a href="{% url 'admin_chat_list' %}">💬 Chat</a>
-      <a href="{% url 'employee_detail' %}">⚙️ Employee Details</a>
-    {% else %}
-      <a href="{% url 'employee_dashboard' %}" class="active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-      <! <a href="{% url 'employee_list' %}"><i class="bi bi-people me-2"></i>All Employees</a> -->
-   <!-- <a href="{% url 'my_profile' %}">My Profile</a>
-
-
-        <a href="{% url 'employee_attendance' %}">📅 My Attendance</a>
-      <a href="{% url 'payroll_list' %}">💰 Payroll</a>
-     <a href="{% url 'employee_leave_list' %}">📅My Leave List</a>
-      <a href="{% url 'wfh_list' %}">🏠 Work From Home</a>
-       <a href="{% url 'meetings_view' %}">🗓️ My Meetings</a>
-      
-{% if admin_id %}
-  <a href="{% url 'chat_with_employee' admin_id %}">💬 Chat with Admin</a>
-{% endif %} -->
-
-
-
-
-      <!-- <a href="{% url 'employee_detail' %}">⚙️ Employee Details</a> -->
-    <!-- {% endif %}
-  </div>
-<div class="sidebar-overlay" onclick="toggleSidebar()"></div>  -->
-
   <!-- Content -->
   <div class="main-content">
     <!-- <button class="toggle-btn mb-3" onclick="toggleSidebar()">☰ Menu</button> -->
@@ -432,6 +54,52 @@ html, body {
                 </div>
             </div>
         </div>
+<!-- ⏰ Punch In/Out Section -->
+<div class="row mb-5">
+  <div class="col-lg-6 offset-lg-3 text-center p-4 bg-light rounded shadow">
+
+    <h3 class="text-success mb-3">⏰ Punch In / Punch Out</h3>
+
+    <img src="{% static 'images/colorful-dial-kids-watch-rainbow-600nw-2526447245.jpg' %}" 
+         width="300" class="mb-3">
+
+    <div class="d-flex justify-content-center gap-3 mb-2">
+      <button id="punchInBtn" class="btn btn-success btn-lg" data-url="{% url 'punch_in' %}">Punch In</button>
+      <button id="punchOutBtn" class="btn btn-danger btn-lg" data-url="{% url 'punch_out' %}">Punch Out</button>
+    </div>
+
+    <div id="punchStatus" class="mt-2 text-center fs-5"></div>
+
+    <!-- ✅ Today's Punch Table Here -->
+    <h4 class="mt-3 text-primary">Today's Punch Details</h4>
+
+    <table class="table table-bordered text-center mt-2">
+        <tr>
+            <th>Punch In</th>
+            <td>
+                {% if today_log and today_log.punch_in %}
+                    {{ today_log.punch_in|date:"Y-m-d H:i:s" }}
+                {% else %}
+                    --:--
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Punch Out</th>
+            <td>
+                {% if today_log and today_log.punch_out %}
+                    {{ today_log.punch_out|date:"Y-m-d H:i:s" }}
+                {% else %}
+                    --:--
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+  </div>
+</div>
+
 
         <!-- 🗓️ Calendar (Right Side) -->
         <div class="col-lg-6 mb-4">
@@ -641,79 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-<!-- <script>
-document.addEventListener('DOMContentLoaded', function() {
 
-  var calendarEl = document.getElementById('attendanceCalendar');
-
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',   // Show month first
-    headerToolbar: false,          // Your custom buttons
-    events: '/attendance-events/', // Django API URL
-
-    // When user clicks a date...
-    dateClick: function(info) {
-        showAttendanceForDate(info.dateStr);
-    }
-  });
-
-  // Render calendar
-  calendar.render();
-
-  // Fix resizing issue (if any hidden containers)
-  setTimeout(() => calendar.updateSize(), 200);
-
-  // Hide attendance events (login/logout) in month view
-  calendar.on('datesSet', function(info) {
-    let isMonth = info.view.type === 'dayGridMonth';
-
-    calendar.getEvents().forEach(function(event) {
-      if (event.extendedProps.type === "attendance") {
-        event.setProp('display', isMonth ? 'none' : 'auto');
-      }
-    });
-  });
-
-  // ---- Custom view button listeners ----
-  document.querySelectorAll('#calendarControls button').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      calendar.changeView(this.getAttribute('data-view'));
-    });
-  });
-
-
-  // -------- Function: Show events for selected day --------
-  function showAttendanceForDate(dateStr) {
-
-      fetch('/attendance-events/')
-        .then(response => response.json())
-        .then(events => {
-
-            // Filter events for the clicked day
-            let selected = events.filter(ev =>
-                ev.start.startsWith(dateStr)
-            );
-
-            if (selected.length === 0) {
-                alert("No attendance or events on " + dateStr);
-                return;
-            }
-
-            // Build message
-            let msg = "Events on " + dateStr + ":\n\n";
-
-            selected.forEach(ev => {
-                msg += ev.title + " ➜ " + ev.start.replace("T", " ");
-                if (ev.end) msg += "  →  " + ev.end.replace("T", " ");
-                msg += "\n\n";
-            });
-
-            alert(msg);
-        });
-  }
-
-});
-</script> -->
 
 <!-- FullCalendar Core -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
@@ -752,8 +348,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 </script>
-<!-- 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html> -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const punchInBtn = document.getElementById('punchInBtn');
+    const punchOutBtn = document.getElementById('punchOutBtn');
+    const punchStatus = document.getElementById('punchStatus');
+
+    function sendPunch(url, btnToDisable, btnToEnable) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            punchStatus.innerText = data.message;
+
+            // Update Punch In/Out times in template
+            if(data.punch_in) document.getElementById('punchInTime').innerText = data.punch_in;
+            if(data.punch_out) document.getElementById('punchOutTime').innerText = data.punch_out;
+
+            if(data.status === 'success') {
+                if(btnToDisable) btnToDisable.disabled = true;
+                if(btnToEnable) btnToEnable.disabled = false;
+            }
+        })
+        .catch(error => {
+            punchStatus.innerText = 'Error! Try again.';
+            console.error(error);
+        });
+    }
+
+    punchInBtn.addEventListener('click', () => {
+        sendPunch(punchInBtn.dataset.url, punchInBtn, punchOutBtn);
+    });
+
+    punchOutBtn.addEventListener('click', () => {
+        sendPunch(punchOutBtn.dataset.url, punchOutBtn, null);
+    });
+});
+
+</script>
+
 {% endblock %}

@@ -101,4 +101,8 @@ path("tickets/admin/", views.admin_view_tickets, name="admin_view_tickets"),
 path("ticket/reply/<int:ticket_id>/", views.admin_reply_ticket, name="admin_reply_ticket"),
 path("tickets/history/", views.employee_ticket_history, name="employee_ticket_history"),
 
+    path('punch-in/', views.punch_in, name='punch_in'),
+    path('punch-out/', views.punch_out, name='punch_out'),
+    path('admin-punch-records/', views.punch_in_out_admin, name='punch_in_out_admin'),
+
 ]

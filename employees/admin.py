@@ -16,3 +16,4 @@ from django.utils.html import format_html
 @admin.register(EmployeeLoginLogout)
 class EmployeeLoginLogoutAdmin(admin.ModelAdmin):
     list_display = ('employee', 'login_time', 'logout_time')
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h3 class="mb-4 text-success">
+    📅 Punch Records for {{ today|date:"Y-m-d" }}
+</h3>
+
+<table class="table table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Punch In</th>
+            <th>Punch Out</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.employee.username }}</td>
+            <td>
+                {% if log.punch_in %}
+                    {{ log.punch_in|date:"Y-m-d H:i:s" }}
+                {% else %}
+                    --:--
+                {% endif %}
+            </td>
+            <td>
+                {% if log.punch_out %}
+                    {{ log.punch_out|date:"Y-m-d H:i:s" }}
+                {% else %}
+                    --:--
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

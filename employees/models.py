@@ -178,3 +178,17 @@ class Ticket(models.Model):
     is_read = models.BooleanField(default=False)  # <--- IMPORTANT
     def __str__(self):
         return self.subject
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class EmployeeLog(models.Model):
+    employee = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    punch_in = models.DateTimeField(null=True, blank=True)
+    punch_out = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.employee.username} - {self.date}"
+
