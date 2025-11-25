@@ -11,7 +11,19 @@
    <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
  
+<style>
+.clock-img {
+    max-width: 250px;   /* limit size on bigger screens */
+    width: 100%;        /* allow shrinking on mobile */
+    height: auto;
+}
+@media (max-width: 480px) {
+    .clock-img {
+        max-width: 180px;
+    }
+}
 
+</style>
     
   
 
@@ -27,9 +39,9 @@
 
 <div class="container mt-5">
 
-    <div class="row mt-5">
+    <!-- <div class="row mt-5">
 
-        <!-- 🎉 Latest News (Left Side) -->
+        
         <div class="col-lg-6 mb-4">
             <div class="card news-card text-white p-4 rounded shadow-lg">
                 <h1 class="mb-4">📢 Latest Office News</h1>
@@ -54,7 +66,7 @@
                 </div>
             </div>
         </div>
-<!-- ⏰ Punch In/Out Section -->
+
 <div class="row mb-5">
   <div class="col-lg-6 offset-lg-3 text-center p-4 bg-light rounded shadow">
 
@@ -70,7 +82,6 @@
 
     <div id="punchStatus" class="mt-2 text-center fs-5"></div>
 
-    <!-- ✅ Today's Punch Table Here -->
     <h4 class="mt-3 text-primary">Today's Punch Details</h4>
 
     <table class="table table-bordered text-center mt-2">
@@ -101,12 +112,12 @@
 </div>
 
 
-        <!-- 🗓️ Calendar (Right Side) -->
+    
         <div class="col-lg-6 mb-4">
             <div class="bg-light p-4 rounded shadow">
                 <h2 class="text-center mb-4 text-success fs-4">🗓️ Attendance Calendar</h2>
 
-                <!-- View Buttons -->
+                
                 <div class="d-flex justify-content-center mb-3 flex-wrap" id="calendarControls">
                     <button class="btn btn-primary m-1" data-view="dayGridMonth">Month</button>
                     <button class="btn btn-primary m-1" data-view="timeGridWeek">Week</button>
@@ -114,12 +125,107 @@
                     <button class="btn btn-primary m-1" data-view="dayGridYear">Year</button>
                 </div>
 
-                <!-- Calendar -->
+                
                 <div id="attendanceCalendar" style="min-height: 400px;"></div>
             </div>
         </div>
 
+    </div>  -->
+<div class="row mt-5">
+
+    <!-- LEFT SIDE: News first, then Clock -->
+    <div class="col-lg-6">
+
+        <!-- 📢 Latest News (TOP) -->
+        <div class="card news-card text-white p-4 rounded shadow-lg mb-4">
+            <h2 class="mb-4">📢 Latest Office News</h2>
+
+            <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
+                <div class="carousel-inner text-center">
+                    <div class="carousel-item active">
+                        <p class="fs-5"><strong>🎉 Employee of the Month:</strong><br>Rajesh Kumar (Sales)</p>
+                    </div>
+                    <div class="carousel-item">
+                        <p class="fs-5"><strong>📅 Holiday:</strong><br>Diwali – Nov 10 (Saturday)</p>
+                    </div>
+                    <div class="carousel-item">
+                        <p class="fs-5"><strong>🏆 Team Achievement:</strong><br>CRM Automation Completed!</p>
+                    </div>
+                    <div class="carousel-item">
+                        <p class="fs-5"><strong>💬 Staff Meeting:</strong><br>Monday 10 AM</p>
+                    </div>
+                    <div class="carousel-item">
+                        <p class="fs-5"><strong>🎂 Birthdays:</strong><br>Priya & Naveen 🎈</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ⏰ Clock (Below News) -->
+        <div class="p-4 bg-light rounded shadow text-center">
+
+            <h3 class="text-success mb-3">⏰ Punch In / Punch Out</h3>
+
+           <img src="{% static 'images/colorful-dial-kids-watch-rainbow-600nw-2526447245.jpg' %}"
+     class="img-fluid clock-img mb-3" alt="Clock">
+
+
+            <div class="d-flex justify-content-center gap-3 mb-2">
+                <button id="punchInBtn" class="btn btn-success btn-lg" data-url="{% url 'punch_in' %}">Punch In</button>
+                <button id="punchOutBtn" class="btn btn-danger btn-lg" data-url="{% url 'punch_out' %}">Punch Out</button>
+            </div>
+
+            <div id="punchStatus" class="mt-2 text-center fs-5"></div>
+
+            <h4 class="mt-3 text-primary">Today's Punch Details</h4>
+
+            <table class="table table-bordered text-center mt-2">
+                <tr>
+                    <th>Punch In</th>
+                    <td id="punchInTime">
+                        {% if today_log and today_log.punch_in %}
+                            {{ today_log.punch_in|date:"Y-m-d H:i:s" }}
+                        {% else %}
+                            --:--
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Punch Out</th>
+                    <td id="punchOutTime">
+                        {% if today_log and today_log.punch_out %}
+                            {{ today_log.punch_out|date:"Y-m-d H:i:s" }}
+                        {% else %}
+                            --:--
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </div>
+
+    <!-- RIGHT SIDE: Calendar -->
+    <div class="col-lg-6 mt-4 mt-lg-0">
+        <div class="bg-light p-4 rounded shadow h-100">
+
+            <h2 class="text-center mb-4 text-success fs-4">🗓️ Attendance Calendar</h2>
+
+            <!-- View Buttons -->
+            <div class="d-flex justify-content-center mb-3 flex-wrap" id="calendarControls">
+                <button class="btn btn-primary m-1" data-view="dayGridMonth">Month</button>
+                <button class="btn btn-primary m-1" data-view="timeGridWeek">Week</button>
+                <button class="btn btn-primary m-1" data-view="timeGridDay">Day</button>
+                <button class="btn btn-primary m-1" data-view="dayGridYear">Year</button>
+            </div>
+
+            <div id="attendanceCalendar" style="min-height: 450px;"></div>
+
+        </div>
+    </div>
+
+</div>
 
 </div>
 
