@@ -7,7 +7,9 @@ from .models import Employee, Department, Designation, Payroll, Attendance, Leav
 import csv
 from reportlab.pdfgen import canvas
 
+
 # ------------------ Employee List ------------------
+
 def employee_list(request):
     q = request.GET.get('q', '')  # search query
     if q:
@@ -16,6 +18,7 @@ def employee_list(request):
         employees = Employee.objects.all()
 
     return render(request, 'employees/employee_list.html', {'employees': employees, 'q': q})
+
 # ------------------ Add Employee ------------------
 from django.shortcuts import render, redirect
 from .models import Employee, Department, Designation
@@ -1380,47 +1383,7 @@ def register(request):
 
     return render(request, 'employees/register.html')
 
-# from django.contrib.auth.models import User
-# from django.contrib import messages
-# from django.shortcuts import render, redirect
-# from django.utils import timezone
-# from .models import Employee
 
-
-# def register(request):
-#     if request.method == "POST":
-#         full_name = request.POST['full_name']
-#         email = request.POST['email']
-#         username = request.POST['username']
-#         password1 = request.POST['password1']
-#         password2 = request.POST['password2']
-
-#         if password1 != password2:
-#             messages.error(request, "Passwords do not match.")
-#             return redirect('register')
-
-#         if User.objects.filter(username=username).exists():
-#             messages.error(request, "Username already exists.")
-#             return redirect('register')
-
-#         # Create user
-#         user = User.objects.create_user(
-#             username=username,
-#             password=password1,
-#             email=email,
-#             first_name=full_name
-#         )
-
-#         # 🔥 Create employee profile (required)
-#         Employee.objects.create(
-#             user=user,
-#             date_joined=timezone.now()
-#         )
-
-#         messages.success(request, "Registration successful! Please sign in.")
-#         return redirect('login')
-
-#     return render(request, 'employees/register.html')
 # automatic attendance-------------------
 from django.utils import timezone
 from .models import EmployeeLoginLogout, Employee, Attendance
@@ -1484,26 +1447,7 @@ def dashboard(request):
 
     return render(request, "employees/home.html", context)
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get("username")
-#         password = request.POST.get("password")
 
-#         user = authenticate(request, username=username, password=password)
-
-#         if user:
-#             login(request, user)
-
-#             # 👉 Superuser → Admin Dashboard
-#             if user.is_superuser:
-#                 return redirect('dashboard')
-
-#             # 👉 All others (staff + normal users) → Employee Dashboard
-#             return redirect('employee_dashboard')
-
-#         messages.error(request, "Invalid username or password")
-
-#     return render(request, 'employees/login.html')
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.utils import timezone
@@ -1544,49 +1488,7 @@ def login_view(request):
 
     return render(request, 'employees/login.html')
 
-# search-------------------
 
-# from django.shortcuts import render, get_object_or_404, redirect
-# from employees.models import Employee, Department, Designation
-# from django.db.models import Q
-
-
-# def search_all(request):
-#     q = request.GET.get("q", "").strip()
-
-#     employees = departments = designations = []
-
-#     if q:
-#         employees = Employee.objects.filter(
-#             Q(first_name__icontains=q) |
-#             Q(last_name__icontains=q) |
-#             Q(emp_id__icontains=q) |
-#             Q(email__icontains=q) |
-#             Q(phone__icontains=q) |
-#             Q(user__username__icontains=q) |
-#             Q(department__name__icontains=q) |
-#             Q(designation__title__icontains=q)
-#         )
-
-#         departments = Department.objects.filter(name__icontains=q)
-#         designations = Designation.objects.filter(title__icontains=q)
-
-#     return render(request, "employees/search_results.html", {
-#         "q": q,
-#         "employees": employees,
-#         "departments": departments,
-#         "designations": designations,
-#     })
-
-
-# def employee_detail(request, id):
-#     employee = Employee.objects.get(id=id)
-#     return render(request, "employees/employee_detail.html", {"employee": employee})
-
-
-# def employee_redirect(request):
-
-#     return redirect("employee_detail", id=request.user.employee.id)
 
 # daily report---------------------------
 
@@ -1691,18 +1593,7 @@ def admin_view_tickets(request):
     return render(request, "employees/admin_view_tickets.html", {"tickets": tickets})
 
 
-# ADMIN — Reply to ticket
-# def admin_reply_ticket(request, ticket_id):
-#     ticket = get_object_or_404(Ticket, id=ticket_id)
 
-#     if request.method == "POST":
-#         ticket.reply = request.POST.get("reply")
-#         ticket.status = request.POST.get("status")
-#         ticket.save()
-#         messages.success(request, "Reply sent!")
-#         return redirect("admin_view_tickets")
-
-#     return render(request, "employees/admin_reply_ticket.html", {"ticket": ticket})
 def admin_reply_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
@@ -1814,4 +1705,32 @@ def punch_in_out_admin(request):
     return render(request, "employees/punch_in_out_admin.html", {
         "logs": logs,
         "today": today
+    })
+
+# search------------------------------
+
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Employee
+
+def employee_details_search(request):
+    query = request.GET.get('q', '')
+
+    employees = []
+
+    if query:
+        employees = Employee.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(emp_id__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(user__username__icontains=query) |
+            Q(department__name__icontains=query) |
+            Q(designation__title__icontains=query)
+        )
+
+    return render(request, "employees/employee_search_list.html", {
+        "employees": employees,
+        "query": query
     })

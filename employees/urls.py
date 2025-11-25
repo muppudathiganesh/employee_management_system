@@ -80,11 +80,7 @@ path('employee/leaves/', views.employee_leave_list, name='employee_leave_list'),
 # emp_login
     path('employee/login/', views.employee_login, name='employee_login'),
 
-# # path("search/", views.search_all, name="search_all"),
-#  path("search/", views.search_all, name="search_all"),
-# # 
-# #    # no ID
-# path("employee/detail/<int:id>/", views.employee_detail, name="employee_detail"),
+
 # report daily------------
 
 path("report/submit/", views.submit_daily_report, name="submit_daily_report"),
@@ -104,5 +100,10 @@ path("tickets/history/", views.employee_ticket_history, name="employee_ticket_hi
     path('punch-in/', views.punch_in, name='punch_in'),
     path('punch-out/', views.punch_out, name='punch_out'),
     path('admin-punch-records/', views.punch_in_out_admin, name='punch_in_out_admin'),
+ # ---------------- Search ----------------
+    path('search/', views.employee_details_search, name='employee_search'),
+
+
+   
 
 ]

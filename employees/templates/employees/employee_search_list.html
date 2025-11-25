@@ -1,0 +1,53 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Search Results for "{{ query }}"</h3>
+
+<form action="{% url 'employee_search' %}" method="get" class="d-flex mb-3">
+    <input type="text" name="q" class="form-control me-2" placeholder="Search..." value="{{ query }}">
+    <button class="btn btn-primary">Search</button>
+</form>
+
+{% if employees %}
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Emp ID</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>View</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for emp in employees %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+            <td>{{ emp.emp_id }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.phone }}</td>
+            <td>{{ emp.department.name }}</td>
+            <td>{{ emp.designation.title }}</td>
+            <td>
+                <a href="{% url 'employee_detail' %}?q={{ emp.emp_id }}" class="btn btn-sm btn-info">
+                    View
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>No employees matched your search.</p>
+{% endif %}
+
+{% endblock %}
+
+
