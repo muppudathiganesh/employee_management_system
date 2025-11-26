@@ -280,6 +280,28 @@ document.querySelectorAll(".dropdown-link").forEach(function(link) {
 
 
 </script>
+<script>
+(function() {
+  const sidebar = document.getElementById('sidebar');
+  const NAVBAR_HEIGHT = (document.querySelector('.navbar') || {offsetHeight:80}).offsetHeight || 80;
+
+  function setSidebarHeight() {
+    if(!sidebar) return;
+    // Use viewport height minus navbar height, but rely on top+bottom if already present.
+    const vh = window.innerHeight;
+    const desired = Math.max(200, vh - NAVBAR_HEIGHT); // minimum height safety
+    sidebar.style.maxHeight = desired + 'px';
+    // in case another rule sets overflow hidden, force it:
+    sidebar.style.overflowY = 'auto';
+    sidebar.style.overflowX = 'hidden';
+  }
+
+  // run now and on resize/orientation change
+  setSidebarHeight();
+  window.addEventListener('resize', setSidebarHeight);
+  window.addEventListener('orientationchange', setSidebarHeight);
+})();
+</script>
 
 
 

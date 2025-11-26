@@ -25,7 +25,7 @@
       z-index: 1050;
       
     }
-    .sidebar {
+    /* .sidebar {
       width: 250px;
       height: 100vh;
       position: fixed;
@@ -39,7 +39,47 @@
       z-index: 1000;
       margin-top: 80px;
          
-    }
+    
+    } */
+/* ===== Sidebar: forced workable layout ===== */
+.sidebar {
+  width: 250px;
+  position: fixed;
+  top: 80px;               /* adjust if your navbar height differs */
+  left: 0;
+  bottom: 0;               /* ensures the element is pinned to bottom */
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background: #2ECC71;
+  color: white;
+  z-index: 1100;           /* ensure above content but below navbar if needed */
+
+  /* Scrolling */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+
+  /* visible scrollbar on all browsers */
+  scrollbar-width: thin;   /* firefox */
+}
+
+/* Optional nicer-looking thin scrollbar (Chrome, Edge, Safari) */
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.35);
+  border-radius: 6px;
+}
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+
+/* Mobile behavior (keeps it off-canvas until toggled) */
+@media (max-width: 768px) {
+  .sidebar { left: -250px; transition: left .28s ease; }
+  .sidebar.active { left: 0; }
+}
+
+/* Ensure content does not trap pointer events on top of sidebar */
+.sidebar-overlay { z-index: 1090; }
+
 
 
 
@@ -182,9 +222,9 @@
   transform: scale(1.05);
 }
 
-html {
+/* html {
   scroll-behavior: smooth;
-}
+} */
 /* Sidebar Close Button */
 .close-btn {
   display: none;
@@ -232,9 +272,9 @@ html {
     padding: 10px 15px;
   }
 }
-html, body {
+/* html, body {
   overflow-x: hidden !important;
-}
+} */
 
 .navbar {
   padding: 8px 10px;
